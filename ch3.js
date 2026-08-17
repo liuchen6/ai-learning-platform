@@ -206,8 +206,8 @@ window.PART3 = [
         "",
         "print('\\n删除含缺失的行:'); print(df.dropna())",
         "print('\\n填0:'); print(df.fillna(0))",
-        "print('\\n填各列均值:'); print(df.fillna(df.mean()))",
-        "print('\\n前向填充 ffill:'); print(df.fillna(method='ffill'))",
+        "print('\\n填各列均值:'); print(df.fillna(df[['A','B']].mean()))",
+        "print('\\n前向填充 ffill:'); print(df.ffill())",
         "print('\\n线性插值:'); print(df[['A','B']].interpolate())"
       ].join("\n")
     }

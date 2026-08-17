@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Numpy & Pandas 比赛速成站</title>
+<title>AI 技能大赛备战站</title>
 <style>
   :root{
     --bg:#0f172a; --bg2:#111c33; --card:#1e293b; --card2:#263449;
@@ -43,6 +43,9 @@
   .ch-title .dot{width:8px;height:8px;border-radius:2px;background:var(--blue)}
   .ch-title[data-ch="2"] .dot{background:#22d3ee}
   .ch-title[data-ch="3"] .dot{background:#fb923c}
+  .ch-title[data-ch="4"] .dot{background:#a78bfa}
+  .ch-title[data-ch="5"] .dot{background:#f472b6}
+  .ch-title[data-ch="6"] .dot{background:#34d399}
   .lesson{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;border-radius:8px;padding:7px 10px;color:var(--dim);cursor:pointer;font-size:13.5px;font-family:inherit;transition:background .15s}
   .lesson:hover{background:var(--card)}
   .lesson.active{background:#0ea5e921;color:var(--txt);font-weight:600}
@@ -83,7 +86,8 @@
   .cb-head{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#0e1a2e;border-bottom:1px solid var(--line)}
   .cb-title{font-size:13px;font-weight:600;color:#cbd5e1}
   .lbl{font-size:11px;background:var(--card2);border-radius:4px;padding:1px 7px;font-weight:700;margin-right:8px}
-  .lbl.demo{color:var(--blue)} .lbl.exer{color:#fb923c} .lbl.ans{color:var(--green)}
+  .lbl.demo{color:var(--blue)} .lbl.exer{color:#fb923c} .lbl.ans{color:var(--green)} .lbl.ref{color:#c4b5fd}
+  .cb-note{margin-left:8px;font-size:11px;color:var(--dim2)}
   .cb-btns{margin-left:auto;display:flex;gap:8px}
   .btn{font-size:12.5px;font-family:inherit;border-radius:7px;padding:5px 14px;border:1px solid var(--line);background:var(--card2);color:var(--txt);cursor:pointer;transition:all .15s;font-weight:600}
   .btn:hover{background:#334155}
@@ -91,6 +95,7 @@
   .btn.run:hover{background:#38bdf8}
   .btn.run:disabled{opacity:.5;cursor:wait}
   .btn.reset{background:none}
+  .btn.copy{background:var(--card2);border-color:var(--line);color:var(--dim)}
   .codearea{display:block;width:100%;border:none;background:transparent;color:#d7e6f5;font-family:Consolas,"Courier New",monospace;font-size:13.5px;line-height:1.65;padding:14px 16px;resize:vertical;min-height:110px;outline:none;tab-size:4;white-space:pre;overflow-x:auto}
   .output{margin:0;padding:12px 16px;background:#070e1a;border-top:1px solid var(--line);color:#94d8a0;font-family:Consolas,"Courier New",monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-all;min-height:20px;display:none}
   .output.show{display:block}
@@ -135,7 +140,7 @@
 <body>
 <header>
   <button id="menuBtn" onclick="toggleNav()">☰</button>
-  <div class="logo">Numpy &amp; Pandas<b> 比赛速成站</b><small>AI 赛道技能大赛备战</small></div>
+  <div class="logo">AI 技能大赛<b> 备战站</b><small>人工智能技术应用赛项</small></div>
   <div class="ml-auto">
     <div id="progressWrap"><div id="progressBar"><div id="progressFill"></div></div><span id="progressNum" style="font-size:12px;color:var(--dim)">0/18</span></div>
     <span id="statusBadge" class="badge loading">⌛ 运行时未加载</span>
@@ -147,8 +152,8 @@
   <main id="main"></main>
 </div>
 <footer>
-  <span>知识点整理自莫烦Python《Numpy &middot; Pandas 数据处理教程》（BV1Ex411L7oT），代码示例按官方 numpy / pandas 文档核对</span>
-  <a href="https://github.com/MorvanZhou/tutorials/tree/master/numpy%26pandas" target="_blank" rel="noopener">原教程代码仓库</a>
+  <span>模块一·二 知识点整理自莫烦Python《Numpy · Pandas 数据处理教程》（BV1Ex411L7oT）、黑马程序员《机器学习》（BV1nt411r7tj）</span>
+  <a href="https://space.bilibili.com/243821484" target="_blank" rel="noopener">莫烦Python 主页</a>
   <span style="margin-left:auto">运行时：Pyodide（浏览器内 Python，无需安装）</span>
 </footer>
 
@@ -157,16 +162,22 @@
 const CH = {
   "1":{name:"第1章 入门"},
   "2":{name:"第2章 NumPy"},
-  "3":{name:"第3章 Pandas"}
+  "3":{name:"第3章 Pandas"},
+  "4":{name:"第4章 机器学习 (10分)"},
+  "5":{name:"第5章 图像与深度学习 (30分)"},
+  "6":{name:"第6章 大模型应用 (40分)"}
 };
 </script>
 <script src="ch1.js"></script>
 <script src="ch2.js"></script>
 <script src="ch3.js"></script>
+<script src="ch4.js"></script>
+<script src="ch5.js"></script>
+<script src="ch6.js"></script>
 <script src="quiz.js"></script>
 <script src="sheet.js"></script>
 <script>
-const LES = (window.PART1 || []).concat(window.PART2 || [], window.PART3 || []);
+const LES = (window.PART1 || []).concat(window.PART2 || [], window.PART3 || [], window.PART4 || [], window.PART5 || [], window.PART6 || []);
 const QUIZ = window.QUIZ || [];
 const SHEET = window.SHEET || [];
 </script>
@@ -182,8 +193,19 @@ function setBadge(state, text){
   b.textContent = text;
 }
 
-function ensurePyodide(){
-  if(pyodide) return Promise.resolve(pyodide);
+function ensurePyodide(pkgs){
+  const need = pkgs || [];
+  const run = () => {
+    const loaded = pyodide.loadedPackages || {};
+    const miss = need.filter(p => !loaded[p] && !loaded[p + "-js"]);
+    if(miss.length) return pyodide.loadPackage(miss);
+    return Promise.resolve();
+  };
+  if(!pyodide) return pyInit.then(run);
+  return run();
+}
+
+function initPyodide(){
   if(!pyInit){
     pyInit = (async () => {
       setBadge("loading", "⏳ 加载 Python 运行时（首次约10MB）…");
@@ -226,7 +248,8 @@ async function runCode(btn){
   stat.textContent = ""; stat.className = "stat-msg";
   btn.disabled = true; btn.textContent = "运行中…";
   try {
-    await ensurePyodide();
+    const pkgs = (block.dataset.pkgs || "").split(",").filter(Boolean);
+    await ensurePyodide(pkgs);
     await pyodide.runPythonAsync("import io, sys; _buf = io.StringIO(); _old = (sys.stdout, sys.stderr); sys.stdout = _buf; sys.stderr = _buf");
     await pyodide.runPythonAsync(code);
     const txt = await pyodide.runPythonAsync("_buf.getvalue()");
@@ -273,14 +296,21 @@ function esc(s){
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-function codeblockHTML(title, lblClass, code){
-  return '<div class="codeblock" data-orig="' + esc(code) + '">' +
+function codeblockHTML(title, lblClass, code, opts){
+  opts = opts || {};
+  const pkgsAttr = opts.pkgs ? ' data-pkgs="' + esc(opts.pkgs) + '"' : "";
+  let btns = '';
+  if(opts.ref){
+    btns = '<button class="btn copy" onclick="copyCode(this)">📋 复制</button>' +
+      '<span class="cb-note">参考代码，需在比赛环境（Anaconda）本地运行</span>';
+  } else {
+    btns = '<button class="btn reset" onclick="resetCode(this)">↺ 重置</button>' +
+      '<button class="btn run" onclick="runCode(this)">▶ 运行</button>';
+  }
+  return '<div class="codeblock"' + pkgsAttr + ' data-orig="' + esc(code) + '">' +
     '<div class="cb-head">' +
       '<span class="cb-title"><span class="lbl ' + lblClass + '">' + title + '</span></span>' +
-      '<div class="cb-btns">' +
-        '<button class="btn reset" onclick="resetCode(this)">↺ 重置</button>' +
-        '<button class="btn run" onclick="runCode(this)">▶ 运行</button>' +
-      '</div>' +
+      '<div class="cb-btns">' + btns + '</div>' +
     '</div>' +
     '<textarea class="codearea" spellcheck="false">' + esc(code) + '</textarea>' +
     '<pre class="output"></pre>' +
@@ -288,12 +318,25 @@ function codeblockHTML(title, lblClass, code){
   '</div>';
 }
 
+function copyCode(btn){
+  const block = btn.closest(".codeblock");
+  const ta = block.querySelector("textarea");
+  const ok = () => { btn.textContent = "✔ 已复制"; setTimeout(() => { btn.textContent = "📋 复制"; }, 1500); };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(ta.value).then(ok).catch(() => { ta.select(); document.execCommand("copy"); ok(); });
+  } else {
+    ta.select(); document.execCommand("copy"); ok();
+  }
+}
+
+
 /* ============ 渲染 ============ */
 function renderNav(activeId){
   const nav = document.getElementById("nav");
   let html = "";
-  ["1","2","3"].forEach(ch => {
+  Object.keys(CH).forEach(ch => {
     const items = LES.filter(l => l.ch === ch);
+    if(!items.length) return;
     html += '<div class="ch-group"><div class="ch-title" data-ch="' + ch + '"><span class="dot"></span>' + CH[ch].name + ' · ' + items.length + '节</div>';
     items.forEach(l => {
       const done = isDone(l.id);
@@ -335,10 +378,11 @@ function updateProgress(){
 }
 
 function lessonHTML(l){
-  const chColor = l.ch === "1" ? "#38bdf8" : (l.ch === "2" ? "#22d3ee" : "#fb923c");
+  const colorMap = {"1":"#38bdf8","2":"#22d3ee","3":"#fb923c","4":"#a78bfa","5":"#f472b6","6":"#34d399"};
+  const chColor = colorMap[l.ch] || "#38bdf8";
   let html = '<div id="article">' +
     '<div class="sec-head">' +
-      '<div class="sec-ch"><span class="hh" style="background:' + chColor + '"></span>' + CH[l.ch].name + ' · 第 ' + l.no + ' 课 · 视频 ' + l.dur + '</div>' +
+      '<div class="sec-ch"><span class="hh" style="background:' + chColor + '"></span>' + CH[l.ch].name + ' · 第 ' + l.no + ' 课 · ' + l.dur + '</div>' +
       '<h1>' + esc(l.title) + '</h1>' +
       '<div class="sec-meta"><span class="tag">' + esc(l.tag || "") + '</span>' +
       '<span class="tag" style="cursor:pointer" onclick="toggleDone(\'' + l.id + '\')" id="doneBtn">' + (isDone(l.id) ? "✔ 已学会" : "标记学会了") + '</span></div>' +
@@ -350,7 +394,16 @@ function lessonHTML(l){
     html += '</ul></div>';
   }
   if(l.tip) html += '<div class="card tip"><h3><span class="ic orange">⚡</span>比赛提效提示</h3><p>' + l.tip + '</p></div>';
-  if(l.demos) l.demos.forEach(d => { html += codeblockHTML(d.title, "demo", d.code); });
+  if(l.demos) l.demos.forEach(d => { html += codeblockHTML(d.title, "demo", d.code, {pkgs: d.pkgs}); });
+  if(l.refs) l.refs.forEach(r => { html += codeblockHTML(r.title, "ref", r.code, {ref: true}); });
+  if(l.steps) l.steps.forEach(s => {
+    html += '<div class="sheet-section"><h3>' + esc(s.title) + '</h3><div class="card" style="padding:0;overflow:hidden"><table><tr>' +
+      s.head.map(h => '<th>' + h + '</th>').join("") + '</tr>';
+    s.rows.forEach(r => {
+      html += '<tr><td style="white-space:nowrap;color:#f1f5f9">' + r[0] + '</td><td>' + r[1] + '</td></tr>';
+    });
+    html += '</table></div></div>';
+  });
   if(l.exercise){
     html += '<div class="task"><h3>🏋 练一练</h3><p>' + l.exercise.task + '</p>' +
       '<p class="hint">提示：在下方代码区动手修改，点运行看结果。先自己写，再对照参考答案。</p></div>';
