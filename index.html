@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Numpy & Pandas 比赛速成站</title>
+<style>
+  :root{
+    --bg:#0f172a; --bg2:#111c33; --card:#1e293b; --card2:#263449;
+    --line:#334155; --txt:#e2e8f0; --dim:#94a3b8; --dim2:#64748b;
+    --blue:#38bdf8; --orange:#fbbf24; --green:#34d399; --red:#f87171;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;font-size:15px;line-height:1.7}
+  ::selection{background:#0ea5e980}
+
+  header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;padding:0 20px;height:56px;background:rgba(11,21,36,.95);border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
+  .logo{font-weight:800;font-size:17px;white-space:nowrap}
+  .logo b{color:var(--blue)}
+  .logo small{color:var(--dim2);font-weight:500;margin-left:8px}
+  .ml-auto{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .badge{font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--dim);white-space:nowrap}
+  .badge.ready{color:var(--green);border-color:#34d39955;background:#34d39911}
+  .badge.loading{color:var(--orange);border-color:#fbbf2455;background:#fbbf2411}
+  .badge.err{color:var(--red);border-color:#f8717155;background:#f8717111}
+  #progressWrap{display:flex;align-items:center;gap:8px}
+  #progressBar{width:110px;height:6px;background:var(--card2);border-radius:3px;overflow:hidden}
+  #progressFill{height:100%;width:0%;background:linear-gradient(90deg,var(--blue),var(--green));transition:width .3s}
+
+  .wrap{display:flex;min-height:calc(100vh - 56px)}
+  nav{width:290px;flex-shrink:0;border-right:1px solid var(--line);padding:16px 12px 40px;overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:56px;background:var(--bg2)}
+  main{flex:1;min-width:0;padding:28px 36px 80px;max-width:980px}
+  @media(max-width:900px){
+    nav{position:fixed;left:0;top:56px;bottom:0;z-index:40;transform:translateX(-100%);transition:transform .25s;box-shadow:0 10px 30px #000a}
+    nav.open{transform:none}
+    main{padding:20px 16px 60px}
+    #menuBtn{display:inline-flex!important}
+    #progressBar{width:60px}
+  }
+
+  .ch-group{margin-bottom:18px}
+  .ch-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:2px;color:var(--dim2);padding:6px 10px}
+  .ch-title .dot{width:8px;height:8px;border-radius:2px;background:var(--blue)}
+  .ch-title[data-ch="2"] .dot{background:#22d3ee}
+  .ch-title[data-ch="3"] .dot{background:#fb923c}
+  .lesson{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;border-radius:8px;padding:7px 10px;color:var(--dim);cursor:pointer;font-size:13.5px;font-family:inherit;transition:background .15s}
+  .lesson:hover{background:var(--card)}
+  .lesson.active{background:#0ea5e921;color:var(--txt);font-weight:600}
+  .lesson .no{font-size:11.5px;color:var(--dim2);width:26px;flex-shrink:0;font-variant-numeric:tabular-nums}
+  .lesson.active .no{color:var(--blue)}
+  .lesson .dur{margin-left:auto;font-size:11px;color:var(--dim2);flex-shrink:0}
+  .lesson .ck{font-size:12px;color:var(--green);flex-shrink:0}
+  .nav-extra{margin-top:8px;border-top:1px solid var(--line);padding-top:12px}
+
+  #article{animation:fadeIn .25s}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .sec-head{margin-bottom:20px}
+  .sec-ch{font-size:12px;letter-spacing:3px;color:var(--dim2);font-weight:700;margin-bottom:6px}
+  .sec-ch .hh{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:8px;vertical-align:1px}
+  h1{font-size:26px;font-weight:800;line-height:1.3;color:#f1f5f9}
+  .sec-meta{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+  .tag{font-size:12px;padding:2px 10px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--dim)}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+  .card h3{font-size:15px;font-weight:700;margin-bottom:12px;color:#f8fafc;display:flex;align-items:center;gap:8px}
+  .card h3 .ic{width:22px;height:22px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+  .ic.blue{background:#0ea5e922;color:var(--blue)}
+  .ic.np{background:#22d3ee22;color:#22d3ee}
+  .ic.pd{background:#fb923c22;color:#fb923c}
+  .ic.green{background:#34d39922;color:var(--green)}
+  .ic.orange{background:#fbbf2422;color:var(--orange)}
+
+  .points{list-style:none}
+  .points>li{padding:7px 0 7px 26px;position:relative;color:#cbd5e1}
+  .points>li::before{content:"";position:absolute;left:6px;top:17px;width:7px;height:7px;border-radius:2px;background:var(--blue);opacity:.7}
+  .points b{color:#f1f5f9}
+  .points code{background:var(--card2);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:13px;color:#7dd3fc;font-family:Consolas,"Courier New",monospace;word-break:break-all}
+  .tip{background:#fbbf2410;border:1px solid #fbbf2433}
+  .tip p{color:#e2e8f0;font-size:14.5px}
+  .tip b{color:var(--orange)}
+
+  .codeblock{border-radius:12px;overflow:hidden;border:1px solid var(--line);margin:16px 0;background:#0b1524}
+  .cb-head{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#0e1a2e;border-bottom:1px solid var(--line)}
+  .cb-title{font-size:13px;font-weight:600;color:#cbd5e1}
+  .lbl{font-size:11px;background:var(--card2);border-radius:4px;padding:1px 7px;font-weight:700;margin-right:8px}
+  .lbl.demo{color:var(--blue)} .lbl.exer{color:#fb923c} .lbl.ans{color:var(--green)}
+  .cb-btns{margin-left:auto;display:flex;gap:8px}
+  .btn{font-size:12.5px;font-family:inherit;border-radius:7px;padding:5px 14px;border:1px solid var(--line);background:var(--card2);color:var(--txt);cursor:pointer;transition:all .15s;font-weight:600}
+  .btn:hover{background:#334155}
+  .btn.run{background:#0ea5e9;border-color:#0ea5e9;color:#04283d}
+  .btn.run:hover{background:#38bdf8}
+  .btn.run:disabled{opacity:.5;cursor:wait}
+  .btn.reset{background:none}
+  .codearea{display:block;width:100%;border:none;background:transparent;color:#d7e6f5;font-family:Consolas,"Courier New",monospace;font-size:13.5px;line-height:1.65;padding:14px 16px;resize:vertical;min-height:110px;outline:none;tab-size:4;white-space:pre;overflow-x:auto}
+  .output{margin:0;padding:12px 16px;background:#070e1a;border-top:1px solid var(--line);color:#94d8a0;font-family:Consolas,"Courier New",monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-all;min-height:20px;display:none}
+  .output.show{display:block}
+  .output.err{color:#fda4af}
+  .output img{display:block;margin:10px auto;max-width:90%;border-radius:8px;border:1px solid var(--line)}
+  .stat-msg{font-size:12px;color:var(--dim2);padding:6px 16px;display:none}
+  .stat-msg.show{display:block}
+
+  .task{background:#fb923c10;border:1px solid #fb923c33;border-radius:12px;padding:16px 20px;margin:16px 0}
+  .task h3{font-size:15px;font-weight:700;color:#fdba74;margin-bottom:8px}
+  .task p{color:#e2e8f0;font-size:14.5px}
+  .task .hint{font-size:13px;color:var(--dim);margin-top:8px}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{text-align:left;font-size:12px;letter-spacing:1px;color:var(--dim2);padding:8px 10px;border-bottom:1px solid var(--line);background:var(--card2)}
+  td{padding:9px 10px;border-bottom:1px solid #1e293b;color:#cbd5e1;vertical-align:top}
+  td code{background:var(--card2);border-radius:4px;padding:1px 6px;font-size:12.5px;color:#7dd3fc;font-family:Consolas,monospace;word-break:break-all}
+  tr:hover td{background:#1a2740}
+  .sheet-section{margin:24px 0}
+  .sheet-section h3{font-size:15px;margin-bottom:10px;color:#f8fafc;border-left:3px solid var(--blue);padding-left:10px}
+
+  .quiz-item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:14px 0}
+  .quiz-q{font-weight:600;color:#f1f5f9;margin-bottom:10px;font-size:14.5px}
+  .quiz-q .qn{color:var(--blue);font-weight:800;margin-right:8px}
+  .opt{display:block;width:100%;text-align:left;background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:8px 14px;margin:6px 0;color:#cbd5e1;cursor:pointer;font-size:14px;font-family:inherit;transition:all .15s}
+  .opt:hover{border-color:#0ea5e9}
+  .opt.chosen.correct{background:#34d39922;border-color:var(--green);color:#a7f3d0}
+  .opt.chosen.wrong{background:#f8717122;border-color:var(--red);color:#fecaca}
+  .quiz-exp{display:none;margin-top:10px;font-size:13px;color:var(--dim);border-top:1px dashed var(--line);padding-top:10px}
+  .quiz-exp.show{display:block}
+  .quiz-exp b{display:block;margin-bottom:4px}
+
+  footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);color:var(--dim2);font-size:12.5px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+  footer a{color:var(--blue);text-decoration:none}
+  #menuBtn{display:none;background:var(--card2);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:4px 12px;font-size:16px;cursor:pointer}
+  #overlay{display:none;position:fixed;inset:0;background:#0008;z-index:35}
+  @media(max-width:900px){#overlay.show{display:block}}
+
+  .nav-next{display:flex;justify-content:space-between;gap:10px;margin-top:28px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<header>
+  <button id="menuBtn" onclick="toggleNav()">☰</button>
+  <div class="logo">Numpy &amp; Pandas<b> 比赛速成站</b><small>AI 赛道技能大赛备战</small></div>
+  <div class="ml-auto">
+    <div id="progressWrap"><div id="progressBar"><div id="progressFill"></div></div><span id="progressNum" style="font-size:12px;color:var(--dim)">0/18</span></div>
+    <span id="statusBadge" class="badge loading">⌛ 运行时未加载</span>
+  </div>
+</header>
+<div id="overlay" onclick="closeNav()"></div>
+<div class="wrap">
+  <nav id="nav"></nav>
+  <main id="main"></main>
+</div>
+<footer>
+  <span>知识点整理自莫烦Python《Numpy &middot; Pandas 数据处理教程》（BV1Ex411L7oT），代码示例按官方 numpy / pandas 文档核对</span>
+  <a href="https://github.com/MorvanZhou/tutorials/tree/master/numpy%26pandas" target="_blank" rel="noopener">原教程代码仓库</a>
+  <span style="margin-left:auto">运行时：Pyodide（浏览器内 Python，无需安装）</span>
+</footer>
+
+<script>
+/* ============ 数据（由外部 JS 填充） ============ */
+const CH = {
+  "1":{name:"第1章 入门"},
+  "2":{name:"第2章 NumPy"},
+  "3":{name:"第3章 Pandas"}
+};
+</script>
+<script src="ch1.js"></script>
+<script src="ch2.js"></script>
+<script src="ch3.js"></script>
+<script src="quiz.js"></script>
+<script src="sheet.js"></script>
+<script>
+const LES = (window.PART1 || []).concat(window.PART2 || [], window.PART3 || []);
+const QUIZ = window.QUIZ || [];
+const SHEET = window.SHEET || [];
+</script>
+<script>
+/* ============ Pyodide 引擎 ============ */
+const PYODIDE_VERSION = "v314.0.5";
+const PYODIDE_BASE = "https://cdn.jsdelivr.net/pyodide/" + PYODIDE_VERSION + "/full/";
+let pyodide = null, pyInit = null;
+
+function setBadge(state, text){
+  const b = document.getElementById("statusBadge");
+  b.className = "badge " + state;
+  b.textContent = text;
+}
+
+function ensurePyodide(){
+  if(pyodide) return Promise.resolve(pyodide);
+  if(!pyInit){
+    pyInit = (async () => {
+      setBadge("loading", "⏳ 加载 Python 运行时（首次约10MB）…");
+      await new Promise((res, rej) => {
+        const s = document.createElement("script");
+        s.src = PYODIDE_BASE + "pyodide.js";
+        s.onload = res;
+        s.onerror = () => rej(new Error("Pyodide CDN 加载失败，请检查网络"));
+        document.head.appendChild(s);
+      });
+      pyodide = await loadPyodide({ indexURL: PYODIDE_BASE });
+      await pyodide.loadPackage(["numpy", "pandas", "matplotlib"]);
+      await pyodide.runPythonAsync([
+        "import io, base64",
+        "import matplotlib",
+        "matplotlib.use('Agg')",
+        "import matplotlib.pyplot as plt",
+        "_plt_img_hooks = []",
+        "def _show_hook(*a, **k):",
+        "    buf = io.BytesIO()",
+        "    plt.savefig(buf, format='png', bbox_inches='tight', dpi=110)",
+        "    plt.close('all')",
+        "    _plt_img_hooks.append(base64.b64encode(buf.getvalue()).decode())",
+        "plt.show = _show_hook"
+      ].join("\n"));
+      setBadge("ready", "✔ 运行时就绪");
+      return pyodide;
+    })().catch(e => { setBadge("err", "✖ 运行时加载失败"); throw e; });
+  }
+  return pyInit;
+}
+
+async function runCode(btn){
+  const block = btn.closest(".codeblock");
+  const ta = block.querySelector("textarea");
+  const out = block.querySelector(".output");
+  const stat = block.querySelector(".stat-msg");
+  const code = ta.value;
+  out.textContent = ""; out.className = "output show";
+  stat.textContent = ""; stat.className = "stat-msg";
+  btn.disabled = true; btn.textContent = "运行中…";
+  try {
+    await ensurePyodide();
+    await pyodide.runPythonAsync("import io, sys; _buf = io.StringIO(); _old = (sys.stdout, sys.stderr); sys.stdout = _buf; sys.stderr = _buf");
+    await pyodide.runPythonAsync(code);
+    const txt = await pyodide.runPythonAsync("_buf.getvalue()");
+    const imgs = await pyodide.runPythonAsync("list(_plt_img_hooks)");
+    await pyodide.runPythonAsync("sys.stdout, sys.stderr = _old");
+    renderOutput(out, txt, imgs);
+  } catch(e){
+    await pyodide.runPythonAsync("sys.stdout, sys.stderr = _old").catch(() => {});
+    out.textContent = String((e && e.message) || e);
+    out.className = "output show err";
+    const msg = (e && e.message || String(e)).split("\n").pop().slice(0, 120);
+    stat.textContent = "✖ " + msg;
+    stat.className = "stat-msg show";
+  } finally {
+    btn.disabled = false; btn.textContent = "▶ 运行";
+  }
+}
+
+function renderOutput(out, txt, imgs){
+  if(imgs && imgs.length){
+    out.textContent = txt || "（输出见下图）";
+    imgs.forEach(b64 => {
+      const img = document.createElement("img");
+      img.src = "data:image/png;base64," + b64;
+      img.alt = "绘图输出";
+      out.appendChild(img);
+    });
+  } else {
+    out.textContent = txt || "（无输出）";
+  }
+  out.className = "output show";
+}
+
+function resetCode(btn){
+  const block = btn.closest(".codeblock");
+  block.querySelector("textarea").value = block.dataset.orig;
+  const out = block.querySelector(".output");
+  out.textContent = ""; out.className = "output";
+  const stat = block.querySelector(".stat-msg");
+  stat.textContent = ""; stat.className = "stat-msg";
+}
+
+function esc(s){
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function codeblockHTML(title, lblClass, code){
+  return '<div class="codeblock" data-orig="' + esc(code) + '">' +
+    '<div class="cb-head">' +
+      '<span class="cb-title"><span class="lbl ' + lblClass + '">' + title + '</span></span>' +
+      '<div class="cb-btns">' +
+        '<button class="btn reset" onclick="resetCode(this)">↺ 重置</button>' +
+        '<button class="btn run" onclick="runCode(this)">▶ 运行</button>' +
+      '</div>' +
+    '</div>' +
+    '<textarea class="codearea" spellcheck="false">' + esc(code) + '</textarea>' +
+    '<pre class="output"></pre>' +
+    '<div class="stat-msg"></div>' +
+  '</div>';
+}
+
+/* ============ 渲染 ============ */
+function renderNav(activeId){
+  const nav = document.getElementById("nav");
+  let html = "";
+  ["1","2","3"].forEach(ch => {
+    const items = LES.filter(l => l.ch === ch);
+    html += '<div class="ch-group"><div class="ch-title" data-ch="' + ch + '"><span class="dot"></span>' + CH[ch].name + ' · ' + items.length + '节</div>';
+    items.forEach(l => {
+      const done = isDone(l.id);
+      html += '<button class="lesson' + (l.id === activeId ? " active" : "") + '" onclick="goto(\'' + l.id + '\')">' +
+        '<span class="no">' + l.no + '</span><span>' + esc(l.title) + '</span>' +
+        (done ? '<span class="ck">✔</span>' : '') +
+        '<span class="dur">' + l.dur + '</span></button>';
+    });
+    html += '</div>';
+  });
+  html += '<div class="nav-extra">' +
+    '<button class="lesson' + (activeId === "_sheet" ? " active" : "") + '" onclick="goto(\'_sheet\')"><span class="no">📋</span><span>API 速查表</span></button>' +
+    '<button class="lesson' + (activeId === "_quiz" ? " active" : "") + '" onclick="goto(\'_quiz\')"><span class="no">🎯</span><span>自测题</span></button>' +
+    '</div>';
+  nav.innerHTML = html;
+}
+
+function isDone(id){
+  try { return (JSON.parse(localStorage.getItem("np_done") || "[]")).includes(id); } catch(e){ return false; }
+}
+
+function toggleDone(id){
+  let a = []; try { a = JSON.parse(localStorage.getItem("np_done") || "[]"); } catch(e){}
+  const i = a.indexOf(id);
+  if(i >= 0) a.splice(i, 1); else a.push(id);
+  localStorage.setItem("np_done", JSON.stringify(a));
+  updateProgress();
+  renderNav(id);
+  const b2 = document.getElementById("doneBtn");
+  if(b2){ b2.textContent = isDone(id) ? "✔ 已学会" : "标记学会了"; }
+}
+
+function updateProgress(){
+  const total = LES.length;
+  let done = 0;
+  LES.forEach(l => { if(isDone(l.id)) done++; });
+  document.getElementById("progressFill").style.width = (done / total * 100) + "%";
+  document.getElementById("progressNum").textContent = done + "/" + total;
+}
+
+function lessonHTML(l){
+  const chColor = l.ch === "1" ? "#38bdf8" : (l.ch === "2" ? "#22d3ee" : "#fb923c");
+  let html = '<div id="article">' +
+    '<div class="sec-head">' +
+      '<div class="sec-ch"><span class="hh" style="background:' + chColor + '"></span>' + CH[l.ch].name + ' · 第 ' + l.no + ' 课 · 视频 ' + l.dur + '</div>' +
+      '<h1>' + esc(l.title) + '</h1>' +
+      '<div class="sec-meta"><span class="tag">' + esc(l.tag || "") + '</span>' +
+      '<span class="tag" style="cursor:pointer" onclick="toggleDone(\'' + l.id + '\')" id="doneBtn">' + (isDone(l.id) ? "✔ 已学会" : "标记学会了") + '</span></div>' +
+    '</div>';
+  if(l.lead) html += '<div class="card"><p style="color:#cbd5e1">' + l.lead + '</p></div>';
+  if(l.points && l.points.length){
+    html += '<div class="card"><h3><span class="ic blue">📌</span>核心知识点</h3><ul class="points">';
+    l.points.forEach(p => { html += '<li>' + p + '</li>'; });
+    html += '</ul></div>';
+  }
+  if(l.tip) html += '<div class="card tip"><h3><span class="ic orange">⚡</span>比赛提效提示</h3><p>' + l.tip + '</p></div>';
+  if(l.demos) l.demos.forEach(d => { html += codeblockHTML(d.title, "demo", d.code); });
+  if(l.exercise){
+    html += '<div class="task"><h3>🏋 练一练</h3><p>' + l.exercise.task + '</p>' +
+      '<p class="hint">提示：在下方代码区动手修改，点运行看结果。先自己写，再对照参考答案。</p></div>';
+    html += codeblockHTML("练习区", "exer", l.exercise.starter || "import numpy as np\nimport pandas as pd\n");
+    if(l.exercise.solution) html += codeblockHTML("参考答案（先自己做再看）", "ans", l.exercise.solution);
+  }
+  if(l.next){
+    html += '<div class="nav-next">' +
+      (l.prev ? '<button class="btn" onclick="goto(\'' + l.prev + '\')">← ' + l.prevNo + ' ' + esc(l.prevTitle) + '</button>' : '<span></span>') +
+      '<button class="btn run" onclick="goto(\'' + l.next + '\')">下一课：' + l.nextNo + ' ' + esc(l.nextTitle) + ' →</button>' +
+    '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function sheetHTML(){
+  let html = '<div id="article"><div class="sec-head">' +
+    '<div class="sec-ch"><span class="hh" style="background:#c4b5fd"></span>比赛速查</div>' +
+    '<h1>API 速查表</h1><div class="sec-meta"><span class="tag">按用途查写法</span><span class="tag">开卷武器，现场对照</span></div></div>' +
+    '<div class="card" style="background:#8b5cf611;border-color:#8b5cf644"><p style="color:#cbd5e1">数据清洗、特征构造、结果整理靠 pandas，数值计算、矩阵运算靠 numpy。所有写法都可以在对应课程里实际运行验证。</p></div>';
+  SHEET.forEach(s => {
+    html += '<div class="sheet-section"><h3>' + esc(s.title) + '</h3><div class="card" style="padding:0;overflow:hidden"><table><tr>' +
+      s.head.map(h => '<th>' + h + '</th>').join("") + '</tr>';
+    s.rows.forEach(r => {
+      html += '<tr><td style="white-space:nowrap;color:#f1f5f9">' + r[0] + '</td><td>' + r[1] + '</td></tr>';
+    });
+    html += '</table></div></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function quizHTML(){
+  let html = '<div id="article"><div class="sec-head">' +
+    '<div class="sec-ch"><span class="hh" style="background:#34d399"></span>自测</div>' +
+    '<h1>自测题</h1><div class="sec-meta"><span class="tag">' + QUIZ.length + ' 题 · 点击选项即时对答案</span></div></div>' +
+    '<p style="color:var(--dim)">全部做对，说明本章语法已经过关，可以放心上赛场。做错了的，回对应课程再跑一遍代码。</p>';
+  QUIZ.forEach((q, i) => {
+    html += '<div class="quiz-item"><div class="quiz-q"><span class="qn">Q' + (i + 1) + '</span>' + esc(q.q) + '</div>';
+    q.opts.forEach((o, j) => {
+      html += '<button class="opt" onclick="pick(this,' + i + ',' + j + ')">' + String.fromCharCode(65 + j) + '. ' + esc(o) + '</button>';
+    });
+    html += '<div class="quiz-exp" id="exp' + i + '"><b>解析</b>' + esc(q.exp) + '</div></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function pick(btn, qi, oi){
+  const item = btn.closest(".quiz-item");
+  const q = QUIZ[qi];
+  item.querySelectorAll(".opt").forEach(b => { b.className = "opt"; b.disabled = true; });
+  btn.className = "opt chosen " + (oi === q.ans ? "correct" : "wrong");
+  if(oi !== q.ans) item.querySelectorAll(".opt")[q.ans].className = "opt chosen correct";
+  document.getElementById("exp" + qi).className = "quiz-exp show";
+}
+
+function goto(id){
+  const main = document.getElementById("main");
+  if(id === "_sheet") main.innerHTML = sheetHTML();
+  else if(id === "_quiz") main.innerHTML = quizHTML();
+  else {
+    const l = LES.find(x => x.id === id);
+    if(l) main.innerHTML = lessonHTML(l);
+  }
+  renderNav(id);
+  window.scrollTo(0, 0);
+  closeNav();
+  updateProgress();
+}
+
+function toggleNav(){ document.getElementById("nav").classList.toggle("open"); document.getElementById("overlay").classList.toggle("show"); }
+function closeNav(){ document.getElementById("nav").classList.remove("open"); document.getElementById("overlay").classList.remove("show"); }
+
+LES.forEach((l, i) => {
+  const list = LES.filter(x => x.ch === l.ch);
+  const idx = list.indexOf(l);
+  if(idx < list.length - 1){
+    l.next = list[idx + 1].id; l.nextNo = list[idx + 1].no; l.nextTitle = list[idx + 1].title;
+  }
+  if(idx > 0){
+    l.prev = list[idx - 1].id; l.prevNo = list[idx - 1].no; l.prevTitle = list[idx - 1].title;
+  }
+});
+
+updateProgress();
+renderNav("");
+goto(LES.length ? LES[0].id : "_sheet");
+</script>
+</body>
+</html>
