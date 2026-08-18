@@ -98,7 +98,7 @@
   .btn.run:disabled{opacity:.5;cursor:wait}
   .btn.reset{background:none}
   .btn.copy{background:var(--card2);border-color:var(--line);color:var(--dim)}
-  .codearea{display:block;width:100%;border:none;background:transparent;color:#d7e6f5;font-family:Consolas,"Courier New",monospace;font-size:13.5px;line-height:1.65;padding:14px 16px;resize:vertical;min-height:110px;outline:none;tab-size:4;white-space:pre;overflow-x:auto}
+  .codearea{display:block;width:100%;border:none;background:transparent;color:#d7e6f5;font-family:Consolas,"Courier New",monospace;font-size:13.5px;line-height:1.65;padding:14px 16px;outline:none;tab-size:4;white-space:pre;overflow-x:auto;min-height:110px;height:auto;field-sizing:content;resize:none}
   .output{margin:0;padding:12px 16px;background:#070e1a;border-top:1px solid var(--line);color:#94d8a0;font-family:Consolas,"Courier New",monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-all;min-height:20px;display:none}
   .output.show{display:block}
   .output.err{color:#fda4af}
@@ -315,6 +315,7 @@ function renderOutput(out, txt, imgs){
 function resetCode(btn){
   const block = btn.closest(".codeblock");
   block.querySelector("textarea").value = block.dataset.orig;
+  autoGrow(block.querySelector("textarea"));
   const out = block.querySelector(".output");
   out.textContent = ""; out.className = "output";
   const stat = block.querySelector(".stat-msg");
@@ -341,10 +342,15 @@ function codeblockHTML(title, lblClass, code, opts){
       '<span class="cb-title"><span class="lbl ' + lblClass + '">' + title + '</span></span>' +
       '<div class="cb-btns">' + btns + '</div>' +
     '</div>' +
-    '<textarea class="codearea" spellcheck="false">' + esc(code) + '</textarea>' +
+    '<textarea class="codearea" spellcheck="false" oninput="autoGrow(this)">' + esc(code) + '</textarea>' +
     '<pre class="output"></pre>' +
     '<div class="stat-msg"></div>' +
   '</div>';
+}
+
+function autoGrow(ta){
+  ta.style.height = "auto";
+  ta.style.height = ta.scrollHeight + "px";
 }
 
 function copyCode(btn){
@@ -499,6 +505,7 @@ function goto(id){
     const l = LES.find(x => x.id === id);
     if(l) main.innerHTML = lessonHTML(l);
   }
+  document.querySelectorAll(".codearea").forEach(autoGrow);
   renderNav(id);
   window.scrollTo(0, 0);
   closeNav();
