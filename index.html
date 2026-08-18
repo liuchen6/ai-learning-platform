@@ -461,7 +461,6 @@ function renderNav(activeId){
   html += '<div class="nav-extra">' +
     '<button class="lesson' + (activeId === "_sheet" ? " active" : "") + '" onclick="goto(\'_sheet\')"><span class="no">📋</span><span>API 速查表</span></button>' +
     '<button class="lesson' + (activeId === "_quiz" ? " active" : "") + '" onclick="goto(\'_quiz\')"><span class="no">🎯</span><span>自测题</span></button>' +
-    '<button class="lesson' + (activeId === "_tiku" ? " active" : "") + '" onclick="goto(\'_tiku\')"><span class="no">📖</span><span>理论题库</span></button>' +
     '</div>';
   nav.innerHTML = html;
 }
