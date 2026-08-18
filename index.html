@@ -6,23 +6,23 @@
 <title>AI 技能大赛备战站</title>
 <style>
   :root{
-    --bg:#0f172a; --bg2:#111c33; --card:#1e293b; --card2:#263449;
-    --line:#334155; --txt:#e2e8f0; --dim:#94a3b8; --dim2:#64748b;
-    --blue:#38bdf8; --orange:#fbbf24; --green:#34d399; --red:#f87171;
+    --bg:#f5f6f8; --bg2:#eceef1; --card:#ffffff; --card2:#eef0f3;
+    --line:#e2e5ea; --txt:#24292f; --dim:#5f6b76; --dim2:#8b949e;
+    --blue:#2563eb; --orange:#d97706; --green:#16a34a; --red:#dc2626;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--txt);font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;font-size:15px;line-height:1.7}
-  ::selection{background:#0ea5e980}
+  ::selection{background:#93c5fd80}
 
-  header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;padding:0 20px;height:56px;background:rgba(11,21,36,.95);border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
+  header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;padding:0 20px;height:56px;background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
   .logo{font-weight:800;font-size:17px;white-space:nowrap}
   .logo b{color:var(--blue)}
   .logo small{color:var(--dim2);font-weight:500;margin-left:8px}
   .ml-auto{margin-left:auto;display:flex;align-items:center;gap:10px}
   .badge{font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--dim);white-space:nowrap}
-  .badge.ready{color:var(--green);border-color:#34d39955;background:#34d39911}
-  .badge.loading{color:var(--orange);border-color:#fbbf2455;background:#fbbf2411}
-  .badge.err{color:var(--red);border-color:#f8717155;background:#f8717111}
+  .badge.ready{color:var(--green);border-color:#16a34a66;background:#16a34a1a}
+  .badge.loading{color:var(--orange);border-color:#d9770666;background:#d977061a}
+  .badge.err{color:var(--red);border-color:#dc262666;background:#dc26261a}
   #progressWrap{display:flex;align-items:center;gap:8px}
   #progressBar{width:110px;height:6px;background:var(--card2);border-radius:3px;overflow:hidden}
   #progressFill{height:100%;width:0%;background:linear-gradient(90deg,var(--blue),var(--green));transition:width .3s}
@@ -31,7 +31,7 @@
   nav{width:290px;flex-shrink:0;border-right:1px solid var(--line);padding:16px 12px 40px;overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:56px;background:var(--bg2)}
   main{flex:1;min-width:0;padding:28px 36px 80px;max-width:980px}
   @media(max-width:900px){
-    nav{position:fixed;left:0;top:56px;bottom:0;z-index:40;transform:translateX(-100%);transition:transform .25s;box-shadow:0 10px 30px #000a}
+    nav{position:fixed;left:0;top:56px;bottom:0;z-index:40;transform:translateX(-100%);transition:transform .25s;box-shadow:0 10px 30px #00000026}
     nav.open{transform:none}
     main{padding:20px 16px 60px}
     #menuBtn{display:inline-flex!important}
@@ -49,8 +49,8 @@
   .ch-title[data-ch="7"] .dot{background:#fbbf24}
   .ch-title[data-ch="8"] .dot{background:#f87171}
   .lesson{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;border-radius:8px;padding:7px 10px;color:var(--dim);cursor:pointer;font-size:13.5px;font-family:inherit;transition:background .15s}
-  .lesson:hover{background:var(--card)}
-  .lesson.active{background:#0ea5e921;color:var(--txt);font-weight:600}
+  .lesson:hover{background:#eef2f7}
+  .lesson.active{background:#2563eb18;color:var(--txt);font-weight:600}
   .lesson .no{font-size:11.5px;color:var(--dim2);width:26px;flex-shrink:0;font-variant-numeric:tabular-nums}
   .lesson.active .no{color:var(--blue)}
   .lesson .dur{margin-left:auto;font-size:11px;color:var(--dim2);flex-shrink:0}
@@ -62,12 +62,12 @@
   .sec-head{margin-bottom:20px}
   .sec-ch{font-size:12px;letter-spacing:3px;color:var(--dim2);font-weight:700;margin-bottom:6px}
   .sec-ch .hh{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:8px;vertical-align:1px}
-  h1{font-size:26px;font-weight:800;line-height:1.3;color:#f1f5f9}
+  h1{font-size:26px;font-weight:800;line-height:1.3;color:#111827}
   .sec-meta{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
   .tag{font-size:12px;padding:2px 10px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--dim)}
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
-  .card h3{font-size:15px;font-weight:700;margin-bottom:12px;color:#f8fafc;display:flex;align-items:center;gap:8px}
+  .card h3{font-size:15px;font-weight:700;margin-bottom:12px;color:#1f2937;display:flex;align-items:center;gap:8px}
   .card h3 .ic{width:22px;height:22px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
   .ic.blue{background:#0ea5e922;color:var(--blue)}
   .ic.np{background:#22d3ee22;color:#22d3ee}
@@ -76,12 +76,12 @@
   .ic.orange{background:#fbbf2422;color:var(--orange)}
 
   .points{list-style:none}
-  .points>li{padding:7px 0 7px 26px;position:relative;color:#cbd5e1}
+  .points>li{padding:7px 0 7px 26px;position:relative;color:#374151}
   .points>li::before{content:"";position:absolute;left:6px;top:17px;width:7px;height:7px;border-radius:2px;background:var(--blue);opacity:.7}
-  .points b{color:#f1f5f9}
-  .points code{background:var(--card2);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:13px;color:#7dd3fc;font-family:Consolas,"Courier New",monospace;word-break:break-all}
-  .tip{background:#fbbf2410;border:1px solid #fbbf2433}
-  .tip p{color:#e2e8f0;font-size:14.5px}
+  .points b{color:#111827}
+  .points code{background:var(--card2);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:13px;color:#c7254e;font-family:Consolas,"Courier New",monospace;word-break:break-all}
+  .tip{background:#f9731610;border:1px solid #f9731633}
+  .tip p{color:#374151;font-size:14.5px}
   .tip b{color:var(--orange)}
 
   .codeblock{border-radius:12px;overflow:hidden;border:1px solid #3c3f41;margin:16px 0;background:#2b2b2b}
@@ -112,29 +112,32 @@
   .output.show{display:block}
   .output.err{color:#fda4af}
   .output img{display:block;margin:10px auto;max-width:90%;border-radius:8px;border:1px solid var(--line)}
-  .stat-msg{font-size:12px;color:var(--dim2);padding:6px 16px;display:none}
+  .stat-msg{font-size:12px;color:#8f949a;padding:6px 16px;display:none}
   .stat-msg.show{display:block}
 
-  .task{background:#fb923c10;border:1px solid #fb923c33;border-radius:12px;padding:16px 20px;margin:16px 0}
-  .task h3{font-size:15px;font-weight:700;color:#fdba74;margin-bottom:8px}
-  .task p{color:#e2e8f0;font-size:14.5px}
+  .nav-next .btn.run{background:#2563eb;border-color:#2563eb;color:#ffffff}
+  .nav-next .btn.run:hover{background:#3b76f0}
+
+  .task{background:#f9731610;border:1px solid #f9731633;border-radius:12px;padding:16px 20px;margin:16px 0}
+  .task h3{font-size:15px;font-weight:700;color:#c2410c;margin-bottom:8px}
+  .task p{color:#374151;font-size:14.5px}
   .task .hint{font-size:13px;color:var(--dim);margin-top:8px}
 
   table{width:100%;border-collapse:collapse;font-size:13.5px}
   th{text-align:left;font-size:12px;letter-spacing:1px;color:var(--dim2);padding:8px 10px;border-bottom:1px solid var(--line);background:var(--card2)}
-  td{padding:9px 10px;border-bottom:1px solid #1e293b;color:#cbd5e1;vertical-align:top}
-  td code{background:var(--card2);border-radius:4px;padding:1px 6px;font-size:12.5px;color:#7dd3fc;font-family:Consolas,monospace;word-break:break-all}
-  tr:hover td{background:#1a2740}
+  td{padding:9px 10px;border-bottom:1px solid var(--line);color:#374151;vertical-align:top}
+  td code{background:var(--card2);border-radius:4px;padding:1px 6px;font-size:12.5px;color:#c7254e;font-family:Consolas,monospace;word-break:break-all}
+  tr:hover td{background:#f3f4f6}
   .sheet-section{margin:24px 0}
-  .sheet-section h3{font-size:15px;margin-bottom:10px;color:#f8fafc;border-left:3px solid var(--blue);padding-left:10px}
+  .sheet-section h3{font-size:15px;margin-bottom:10px;color:#1f2937;border-left:3px solid var(--blue);padding-left:10px}
 
   .quiz-item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:14px 0}
-  .quiz-q{font-weight:600;color:#f1f5f9;margin-bottom:10px;font-size:14.5px}
+  .quiz-q{font-weight:600;color:#111827;margin-bottom:10px;font-size:14.5px}
   .quiz-q .qn{color:var(--blue);font-weight:800;margin-right:8px}
-  .opt{display:block;width:100%;text-align:left;background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:8px 14px;margin:6px 0;color:#cbd5e1;cursor:pointer;font-size:14px;font-family:inherit;transition:all .15s}
-  .opt:hover{border-color:#0ea5e9}
-  .opt.chosen.correct{background:#34d39922;border-color:var(--green);color:#a7f3d0}
-  .opt.chosen.wrong{background:#f8717122;border-color:var(--red);color:#fecaca}
+  .opt{display:block;width:100%;text-align:left;background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:8px 14px;margin:6px 0;color:#374151;cursor:pointer;font-size:14px;font-family:inherit;transition:all .15s}
+  .opt:hover{border-color:#2563eb}
+  .opt.chosen.correct{background:#16a34a22;border-color:var(--green);color:#15803d}
+  .opt.chosen.wrong{background:#dc262622;border-color:var(--red);color:#b91c1c}
   .quiz-exp{display:none;margin-top:10px;font-size:13px;color:var(--dim);border-top:1px dashed var(--line);padding-top:10px}
   .quiz-exp.show{display:block}
   .quiz-exp b{display:block;margin-bottom:4px}
@@ -475,7 +478,7 @@ function lessonHTML(l){
       '<div class="sec-meta"><span class="tag">' + esc(l.tag || "") + '</span>' +
       '<span class="tag" style="cursor:pointer" onclick="toggleDone(\'' + l.id + '\')" id="doneBtn">' + (isDone(l.id) ? "✔ 已学会" : "标记学会了") + '</span></div>' +
     '</div>';
-  if(l.lead) html += '<div class="card"><p style="color:#cbd5e1">' + l.lead + '</p></div>';
+  if(l.lead) html += '<div class="card"><p style="color:#374151">' + l.lead + '</p></div>';
   if(l.points && l.points.length){
     html += '<div class="card"><h3><span class="ic blue">📌</span>核心知识点</h3><ul class="points">';
     l.points.forEach(p => { html += '<li>' + p + '</li>'; });
@@ -488,7 +491,7 @@ function lessonHTML(l){
     html += '<div class="sheet-section"><h3>' + esc(s.title) + '</h3><div class="card" style="padding:0;overflow:hidden"><table><tr>' +
       s.head.map(h => '<th>' + h + '</th>').join("") + '</tr>';
     s.rows.forEach(r => {
-      html += '<tr><td style="white-space:nowrap;color:#f1f5f9">' + r[0] + '</td><td>' + r[1] + '</td></tr>';
+      html += '<tr><td style="white-space:nowrap;color:#111827">' + r[0] + '</td><td>' + r[1] + '</td></tr>';
     });
     html += '</table></div></div>';
   });
@@ -512,12 +515,12 @@ function sheetHTML(){
   let html = '<div id="article"><div class="sec-head">' +
     '<div class="sec-ch"><span class="hh" style="background:#c4b5fd"></span>比赛速查</div>' +
     '<h1>API 速查表</h1><div class="sec-meta"><span class="tag">按用途查写法</span><span class="tag">开卷武器，现场对照</span></div></div>' +
-    '<div class="card" style="background:#8b5cf611;border-color:#8b5cf644"><p style="color:#cbd5e1">数据清洗、特征构造、结果整理靠 pandas，数值计算、矩阵运算靠 numpy。所有写法都可以在对应课程里实际运行验证。</p></div>';
+    '<div class="card" style="background:#8b5cf60d;border-color:#8b5cf633"><p style="color:#374151">数据清洗、特征构造、结果整理靠 pandas，数值计算、矩阵运算靠 numpy。所有写法都可以在对应课程里实际运行验证。</p></div>';
   SHEET.forEach(s => {
     html += '<div class="sheet-section"><h3>' + esc(s.title) + '</h3><div class="card" style="padding:0;overflow:hidden"><table><tr>' +
       s.head.map(h => '<th>' + h + '</th>').join("") + '</tr>';
     s.rows.forEach(r => {
-      html += '<tr><td style="white-space:nowrap;color:#f1f5f9">' + r[0] + '</td><td>' + r[1] + '</td></tr>';
+      html += '<tr><td style="white-space:nowrap;color:#111827">' + r[0] + '</td><td>' + r[1] + '</td></tr>';
     });
     html += '</table></div></div>';
   });
