@@ -46,6 +46,8 @@
   .ch-title[data-ch="4"] .dot{background:#a78bfa}
   .ch-title[data-ch="5"] .dot{background:#f472b6}
   .ch-title[data-ch="6"] .dot{background:#34d399}
+  .ch-title[data-ch="7"] .dot{background:#fbbf24}
+  .ch-title[data-ch="8"] .dot{background:#f87171}
   .lesson{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;border-radius:8px;padding:7px 10px;color:var(--dim);cursor:pointer;font-size:13.5px;font-family:inherit;transition:background .15s}
   .lesson:hover{background:var(--card)}
   .lesson.active{background:#0ea5e921;color:var(--txt);font-weight:600}
@@ -165,7 +167,9 @@ const CH = {
   "3":{name:"第3章 Pandas"},
   "4":{name:"第4章 机器学习 (10分)"},
   "5":{name:"第5章 图像与深度学习 (30分)"},
-  "6":{name:"第6章 大模型应用 (40分)"}
+  "6":{name:"第6章 大模型应用 (40分)"},
+  "7":{name:"第7章 业务分析与方案设计 (10分)"},
+  "8":{name:"第8章 真题演练"}
 };
 </script>
 <script src="ch1.js"></script>
@@ -174,10 +178,12 @@ const CH = {
 <script src="ch4.js"></script>
 <script src="ch5.js"></script>
 <script src="ch6.js"></script>
+<script src="ch7.js"></script>
+<script src="ch8.js"></script>
 <script src="quiz.js"></script>
 <script src="sheet.js"></script>
 <script>
-const LES = (window.PART1 || []).concat(window.PART2 || [], window.PART3 || [], window.PART4 || [], window.PART5 || [], window.PART6 || []);
+const LES = (window.PART1 || []).concat(window.PART2 || [], window.PART3 || [], window.PART4 || [], window.PART5 || [], window.PART6 || [], window.PART7 || [], window.PART8 || []);
 const QUIZ = window.QUIZ || [];
 const SHEET = window.SHEET || [];
 </script>
@@ -203,6 +209,25 @@ function ensurePyodide(pkgs){
   };
   if(!pyodide) return pyInit.then(run);
   return run();
+}
+
+const DATA_FILES = [
+  "EcommerceUser.csv", "ShortVideo.csv",
+  "SweeperRobot.csv", "SweeperAfterSale.csv",
+  "hotel.csv", "shopping.csv", "lab4f.csv", "lab5f.csv"
+];
+
+async function preloadData(py){
+  const fail = [];
+  for(const f of DATA_FILES){
+    try {
+      const res = await fetch("data/" + f);
+      if(!res.ok) throw new Error("HTTP " + res.status);
+      const buf = new Uint8Array(await res.arrayBuffer());
+      py.FS.writeFile("/home/pyodide/" + f, buf);
+    } catch(e){ fail.push(f); }
+  }
+  return fail;
 }
 
 function initPyodide(){
@@ -231,7 +256,12 @@ function initPyodide(){
         "    _plt_img_hooks.append(base64.b64encode(buf.getvalue()).decode())",
         "plt.show = _show_hook"
       ].join("\n"));
-      setBadge("ready", "✔ 运行时就绪");
+      const fail = await preloadData(pyodide);
+      if(fail.length){
+        setBadge("err", "✖ 运行时就绪，数据缺失: " + fail.join("、"));
+      } else {
+        setBadge("ready", "✔ 运行时就绪");
+      }
       return pyodide;
     })().catch(e => { setBadge("err", "✖ 运行时加载失败"); throw e; });
   }
@@ -378,7 +408,7 @@ function updateProgress(){
 }
 
 function lessonHTML(l){
-  const colorMap = {"1":"#38bdf8","2":"#22d3ee","3":"#fb923c","4":"#a78bfa","5":"#f472b6","6":"#34d399"};
+  const colorMap = {"1":"#38bdf8","2":"#22d3ee","3":"#fb923c","4":"#a78bfa","5":"#f472b6","6":"#34d399","7":"#fbbf24","8":"#f87171"};
   const chColor = colorMap[l.ch] || "#38bdf8";
   let html = '<div id="article">' +
     '<div class="sec-head">' +
