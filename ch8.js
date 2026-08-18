@@ -71,12 +71,13 @@ window.PART8 = [
       "手机号：前 2 位 + 6 个星号 + 后 3 位（如 13812345678 → 13******678）",
       "城市：split 省份关键词（浙江省/北京市 等），用字符串 startswith 判断省维名称；数据里的城市是虚构的（如『浙江省成都市锦江区』），脱敏只取『省/直辖市』部分",
       "会员等级编码用 replace 或 map 一次性完成，不要逐行循环",
+      "规程点名「掩码或哈希」两种脱敏方式。掩码看得见格式，哈希不可逆、适合身份证号这类唯一标识：hashlib.sha256 转 64 位十六进制；同一条数据哈希值恒定，验证可用性时按哈希值互查和去重仍有效",
       "保存名：脱敏后电商用户数据集.csv，不保留索引",
     ],
     demos: [
       {
         title: "三类脱敏 + 等级编码（在线运行）",
-        code: "import pandas as pd\n\ndf = pd.read_csv('EcommerceUser.csv')\ndf = df.drop_duplicates(subset='用户编号', keep='first')\ndf['年龄'] = df['年龄'].fillna(df['年龄'].median())\ndf['是否复购'] = df['是否复购'].fillna(df['是否复购'].mode()[0])\n\n# 姓名脱敏：单字保留，双字保留首字，三字及以上 首字+**\ndef mask_name(name):\n    n = str(name)\n    if len(n) == 1:\n        return n\n    if len(n) == 2:\n        return n[0]\n    return n[0] + '**'\n\ndf['姓名'] = df['姓名'].apply(mask_name)\n\n# 手机号脱敏：前2 + 6星 + 后3\ndef mask_phone(p):\n    p = str(p)\n    return p[:2] + '******' + p[-3:]\n\ndf['手机号'] = df['手机号'].apply(mask_phone)\n\n# 城市脱敏：只保留省/直辖市\nprovince_kw = ['省', '市']  # 北京市/上海市/浙江省 等\ndef keep_province(city):\n    c = str(city)\n    for kw in ['省', '市']:\n        i = c.find(kw)\n        if i != -1:\n            return c[:i + 1]\n    return c\n\ndf['所在城市'] = df['所在城市'].apply(keep_province)\n\n# 需求3 脱敏后前十条\nprint(df.head(10).to_string())\n\n# 需求4 会员等级编码\nlevel_map = {'普通': 0, '白银': 1, '黄金': 2, '铂金': 3}\ndf['会员等级编码'] = df['会员等级'].map(level_map)\nprint(df.head(5)[['姓名', '手机号', '所在城市', '会员等级', '会员等级编码']].to_string())\n\n# 需求5 保存（比赛时取消注释）\n# df.to_csv('脱敏后电商用户数据集.csv', index=False)",
+        code: "import pandas as pd\n\ndf = pd.read_csv('EcommerceUser.csv')\ndf = df.drop_duplicates(subset='用户编号', keep='first')\ndf['年龄'] = df['年龄'].fillna(df['年龄'].median())\ndf['是否复购'] = df['是否复购'].fillna(df['是否复购'].mode()[0])\n\n# 姓名脱敏：单字保留，双字保留首字，三字及以上 首字+**\ndef mask_name(name):\n    n = str(name)\n    if len(n) == 1:\n        return n\n    if len(n) == 2:\n        return n[0]\n    return n[0] + '**'\n\ndf['姓名'] = df['姓名'].apply(mask_name)\n\n# 手机号脱敏：前2 + 6星 + 后3\ndef mask_phone(p):\n    p = str(p)\n    return p[:2] + '******' + p[-3:]\n\ndf['手机号'] = df['手机号'].apply(mask_phone)\n\n# 城市脱敏：只保留省/直辖市\nprovince_kw = ['省', '市']  # 北京市/上海市/浙江省 等\ndef keep_province(city):\n    c = str(city)\n    for kw in ['省', '市']:\n        i = c.find(kw)\n        if i != -1:\n            return c[:i + 1]\n    return c\n\ndf['所在城市'] = df['所在城市'].apply(keep_province)\n\n# 需求3 脱敏后前十条\nprint(df.head(10).to_string())\n\n# 需求4 会员等级编码\nlevel_map = {'普通': 0, '白银': 1, '黄金': 2, '铂金': 3}\ndf['会员等级编码'] = df['会员等级'].map(level_map)\nprint(df.head(5)[['姓名', '手机号', '所在城市', '会员等级', '会员等级编码']].to_string())\n\n# 方式二：哈希脱敏（规程点名「掩码或哈希」；身份证等唯一标识建议哈希）\nimport hashlib\ndf['手机号哈希'] = df['手机号'].apply(lambda p: hashlib.sha256(str(p).encode()).hexdigest())\nprint(df.head(3)[['手机号', '手机号哈希']].to_string())\n\n# 需求5 保存（比赛时取消注释）\n# df.to_csv('脱敏后电商用户数据集.csv', index=False)",
       },
     ],
   },

@@ -224,6 +224,7 @@ const SHEET = window.SHEET || [];
 /* ============ Pyodide 引擎 ============ */
 const PYODIDE_VERSION = "v314.0.5";
 const PYODIDE_BASE = "https://cdn.jsdelivr.net/pyodide/" + PYODIDE_VERSION + "/full/";
+const PY_PACKAGES = ["pandas", "matplotlib", "scikit-learn", "opencv-python", "xgboost"];
 let pyodide = null, pyInit = null;
 
 function setBadge(state, text){
@@ -265,7 +266,7 @@ async function preloadData(py){
 function initPyodide(){
   if(!pyInit){
     pyInit = (async () => {
-      setBadge("loading", "⏳ 加载 Python 运行时（首次约10MB）…");
+      setBadge("loading", "⏳ 加载 Python 运行时（首次约 1-2 分钟，之后秒开）…");
       await new Promise((res, rej) => {
         const s = document.createElement("script");
         s.src = PYODIDE_BASE + "pyodide.js";
@@ -274,7 +275,18 @@ function initPyodide(){
         document.head.appendChild(s);
       });
       pyodide = await loadPyodide({ indexURL: PYODIDE_BASE });
-      await pyodide.loadPackage(["numpy", "pandas", "matplotlib"]);
+      // 一次性预载全部算法库：只加载这一次，所有 demo 复用同一环境
+      for(let i = 0; i < PY_PACKAGES.length; i++){
+        const p = PY_PACKAGES[i];
+        setBadge("loading", "⏳ 加载算法库 " + (i + 1) + "/" + PY_PACKAGES.length + "（" + p + "）…");
+        try {
+          await pyodide.loadPackage(p);
+        } catch(e){
+          setBadge("loading", "↻ 重试 " + p + "…");
+          await pyodide.loadPackage(p);
+        }
+      }
+      setBadge("loading", "⏳ 初始化绘图环境…");
       await pyodide.runPythonAsync([
         "import io, base64",
         "import matplotlib",
@@ -288,6 +300,7 @@ function initPyodide(){
         "    _plt_img_hooks.append(base64.b64encode(buf.getvalue()).decode())",
         "plt.show = _show_hook"
       ].join("\n"));
+      setBadge("loading", "⏳ 预载比赛数据集…");
       const fail = await preloadData(pyodide);
       if(fail.length){
         setBadge("err", "✖ 运行时就绪，数据缺失: " + fail.join("、"));
@@ -299,6 +312,8 @@ function initPyodide(){
   }
   return pyInit;
 }
+
+initPyodide().catch(() => {});
 
 async function runCode(btn){
   const block = btn.closest(".codeblock");
