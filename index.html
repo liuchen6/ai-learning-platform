@@ -207,8 +207,7 @@ function ensurePyodide(pkgs){
     if(miss.length) return pyodide.loadPackage(miss);
     return Promise.resolve();
   };
-  if(!pyodide) return pyInit.then(run);
-  return run();
+  return initPyodide().then(run);
 }
 
 const DATA_FILES = [
