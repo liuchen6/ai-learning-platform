@@ -1,14 +1,15 @@
 /* 第5章 图像与深度学习 (30分)
-   来源视频：
+    来源视频：
    - BV1BT4y1Z7WS OpenCV 30分钟入门（孔工码字）
    - BV14A411C7ZE OpenCV 图像处理全套（唐宇迪，73集）
    - BV1Vx411j7kT PyTorch 神经网络（莫烦Python，35集）
    - BV1hE411t7RN PyTorch 快速入门（小土堆，33集）
    - BV1ko1NYuEkf LabelImg 标注 YOLO 数据（肆十二）
    - BV1d1W9z9E2G YOLOv8 一小时部署（具身智能入门课，5集）
-   比赛环境（按规程）：opencv-python 4.12 / torch 2.0.1+cu117 / torchvision 0.15.2+cu117 / ultralytics 8.3.234 / LabelImg 1.8.6
-   注：浏览器内可运行 OpenCV 基础操作（cv2 数组处理）；
-       PyTorch / YOLO 训练需 GPU，以参考代码 + 实操步骤呈现 */
+    比赛环境（按规程）：opencv-python 4.12 / torch 2.0.1+cu117 / torchvision 0.15.2+cu117 / ultralytics 8.3.234 / LabelImg 1.8.6
+    注：浏览器内可运行 OpenCV 基础操作（cv2 数组处理）；
+       PyTorch / YOLO 训练需 GPU，以参考代码 + 实操步骤呈现
+    官方点名覆盖：图像增强四件套（旋转/缩放/翻转/裁切，5-1a） */
 window.PART5 = [
 {
   id:"5-1", ch:"5", no:"1", title:"图像基本操作",
@@ -31,6 +32,34 @@ window.PART5 = [
   ],
   tip:"图像就是数组，这句话是任务3的万能钥匙。比赛里 90% 的图像操作题都能用「切片 + 通道运算 + cv2 函数」三板斧解决。"
 },
+{
+  id:"5-1a", ch:"5", no:"1A", title:"图像增强四件套：旋转、缩放、翻转、裁切",
+  dur:"考前补漏", tag:"官方点名必会",
+  lead:"官方技能要求点名：能够针对图像数据使用 OpenCV 以及 torchvision 进行旋转、缩放、翻转、裁切等操作，实现图像数据增强。数据增强解决两个问题：样本太少、样本分布偏（比如横图多竖图少）。",
+  points:[
+    "<b>旋转</b>。cv2.rotate 只能转 90°/180°/270°；任意角度要用 cv2.getRotationMatrix2D + cv2.warpAffine。比赛考任意角度时用后者。",
+    "<b>缩放</b>。cv2.resize(img, (宽, 高))，注意参数是 (宽, 高) 不是 (高, 宽)。放大倍率或指定目标尺寸都行。",
+    "<b>翻转</b>。cv2.flip(img, 1) 水平翻转（左右镜像，最常用）、cv2.flip(img, 0) 垂直翻转（上下）、cv2.flip(img, -1) 双向翻转。",
+    "<b>裁切</b>。就是 numpy 切片 img[y1:y2, x1:x2]，也常配合 cv2.copyMakeBorder 补边。",
+    "<b>torchvision 写法</b>。比赛环境里用 transforms：RandomHorizontalFlip、RandomRotation、Resize、RandomCrop，拼在 transforms.Compose 里和数据加载一起用（见下方参考代码）。",
+    "<b>比赛意图</b>。数据集不均衡、样本量少 → 增强做翻转和旋转就行；增强幅度别太大（旋转超过 15° 会引入形变），YOLO 训练里 ultralytics 自带增广，这里学的是数据准备阶段的手动增强。"
+  ],
+  demos:[
+    {
+      title:"OpenCV 四件套演示（在线运行）",
+      code:"import cv2\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport warnings\nwarnings.filterwarnings('ignore')   # 忽略版本弃用警告，保持输出干净\n\n# 浏览器内没有本地图片，先造一张测试图（BGR）\nimg = np.zeros((120, 180, 3), dtype=np.uint8)\nimg[20:100, 40:140, 0] = 255   # 蓝色方块\nimg[50:90, 90:130, 1] = 255    # 绿色方块\n\n# 1. 旋转 90°（固定角度）\nrot = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)\n# 任意角度旋转（比赛常考）\nM = cv2.getRotationMatrix2D((img.shape[1]/2, img.shape[0]/2), 45, 1.0)\nrot45 = cv2.warpAffine(img, M, (img.shape[1], img.shape[0]))\n\n# 2. 缩放\nresized = cv2.resize(img, (90, 60))\n\n# 3. 翻转：1 水平 / 0 垂直 / -1 双向\nflip_h = cv2.flip(img, 1)\nflip_v = cv2.flip(img, 0)\n\n# 4. 裁切（numpy 切片）\ncrop = img[20:100, 40:140]\n\nprint('原图:', img.shape)\nprint('旋转90°:', rot.shape, ' 任意角45°:', rot45.shape)\nprint('缩放后:', resized.shape, ' 翻转后:', flip_h.shape, ' 裁切后:', crop.shape)\nprint('蓝色方块中心像素(应为蓝):', img[70, 80])\nprint('旋转后蓝色方块仍在原位置附近，说明几何变换成功')\n\n# 5. 并排展示（BGR 转 RGB 再显示）\nfig, ax = plt.subplots(2, 2, figsize=(8, 5))\nfor a, t, im in [(ax[0][0], 'Original', img), (ax[0][1], 'Rotate90', rot),\n                 (ax[1][0], 'FlipH', flip_h), (ax[1][1], 'Crop', crop)]:\n    a.imshow(cv2.cvtColor(im, cv2.COLOR_BGR2RGB))\n    a.set_title(t); a.axis('off')\nplt.tight_layout()\nplt.show()",
+      pkgs:"opencv-python"
+    }
+  ],
+  refs:[
+    {
+      title:"torchvision 数据增强写法（比赛环境，配合 DataLoader）",
+      code:"from torchvision import transforms\n\n# 训练集：随机的水平翻转 + 小幅旋转 + 尺寸统一放大\n# 比赛里模型输入尺寸固定（如 224x224），Resize 基本必写\ntrain_tf = transforms.Compose([\n    transforms.Resize((224, 224)),\n    transforms.RandomHorizontalFlip(p=0.5),   # 50% 概率水平翻转\n    transforms.RandomRotation(15),            # 随机旋转 ±15°\n    transforms.RandomCrop(200),               # 随机裁切 200x200\n    transforms.ToTensor(),\n    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])\n])\n\n# 测试集：只做尺寸统一，不加随机增强\n# 增强只加在训练集，防止模型见过测试集的花样\ntest_tf = transforms.Compose([\n    transforms.Resize((224, 224)),\n    transforms.ToTensor(),\n    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])\n])"
+    }
+  ],
+  tip:"判断题高频考点：数据增强只作用于训练集，测试集不能加随机增强（否则评估结果失真）。OpenCV 的翻转方向和旋转方向写代码前先想清楚，镜像和旋转反了也是数据增强，但语义就错了。"
+}
+,
 {
   id:"5-2", ch:"5", no:"2", title:"阈值与滤波",
   dur:"全第3章", tag:"OpenCV",

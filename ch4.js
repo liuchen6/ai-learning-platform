@@ -207,5 +207,25 @@ window.PART4 = [
     }
   ],
   tip:"joblib 保存模型是比赛送分细节，别忘了。肘部法讲出「拐点」两个字，说明你真懂 K 值怎么选。"
+},
+{
+  id:"4-11", ch:"4", no:"11", title:"XGBoost：规程点名的第 6 个算法",
+  dur:"考前补漏", tag:"官方点名必会",
+  lead:"官方技能要求点名 6 个算法：K近邻、逻辑回归、决策树、随机森林、贝叶斯、XGBoost。前 5 个在前面课程里，XGBoost 单独补这一课。它是竞赛数据（表格式业务数据）上效果最好的模型之一，用法和 sklearn 完全一致。",
+  points:[
+    "<b>XGBoost 是什么</b>。梯度提升树：串行训练多棵决策树，每棵树专修前面所有树犯的错，最后加权投票。表格数据上通常比随机森林还准。",
+    "<b>调用方式</b>。from xgboost import XGBClassifier，接口长这样：fit / predict / predict_proba 和 sklearn 一模一样，sklearn 里会什么这里就会什么。",
+    "<b>关键参数</b>。n_estimators 树的数量（默认 100）、max_depth 树的深度（默认 6，数据噪音大就调小）、learning_rate 学习率、random_state 固定随机种子。不调参默认值也能跑。",
+    "<b>特征重要性</b>。feature_importance_ 属性看哪个特征对预测贡献大，和随机森林一样，是报告里的加分内容。",
+    "<b>比赛注意</b>。XGBoost 在 xgboost 库而不是 sklearn 里，import 语句写对就有分；评估用 classification_report / accuracy_score，和其它算法代码完全共用。"
+  ],
+  demos:[
+    {
+      title:"XGBoost 分类 + 特征重要性（在线运行）",
+      code:"from xgboost import XGBClassifier\nfrom sklearn.datasets import load_iris\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score, classification_report\n\nX, y = load_iris(return_X_y=True)\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.3, random_state=42)\n\nmodel = XGBClassifier(n_estimators=100, max_depth=3, random_state=42)\nmodel.fit(X_train, y_train)\npred = model.predict(X_test)\n\nprint('准确率:', round(accuracy_score(y_test, pred), 4))\nprint(classification_report(y_test, pred))\nprint('特征重要性:', model.feature_importances_.round(3))\nprint('前几个特征最重要，报告里可以直接引用')",
+      pkgs:"xgboost,scikit-learn"
+    }
+  ],
+  tip:"XGBoost 上手成本极低：把 4-7 随机森林课的代码里 RandomForestClassifier 换成 XGBClassifier 就能跑。比赛题如果写了「请使用 XGBoost」，其他算法写的都对也拿不到这题的分数，务必会用导入方式。"
 }
 ];

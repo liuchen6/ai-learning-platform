@@ -84,33 +84,33 @@
   .tip p{color:#374151;font-size:14.5px}
   .tip b{color:var(--orange)}
 
-  .codeblock{border-radius:12px;overflow:hidden;border:1px solid #3c3f41;margin:16px 0;background:#2b2b2b}
-  .cb-head{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#333333;border-bottom:1px solid #3c3f41}
-  .cb-title{font-size:13px;font-weight:600;color:#bbbbbb}
-  .lbl{font-size:11px;background:#45474a;border-radius:4px;padding:1px 7px;font-weight:700;margin-right:8px}
-  .lbl.demo{color:#6a8759} .lbl.exer{color:#cc7832} .lbl.ans{color:#6a8759} .lbl.ref{color:#9876aa}
-  .cb-note{margin-left:8px;font-size:11px;color:#808080}
+  .codeblock{border-radius:12px;overflow:hidden;border:1px solid #d4d4d8;margin:16px 0;background:#ffffff}
+  .cb-head{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#fafafa;border-bottom:1px solid #e2e5ea}
+  .cb-title{font-size:13px;font-weight:600;color:#374151}
+  .lbl{font-size:11px;background:#e5e7eb;border-radius:4px;padding:1px 7px;font-weight:700;margin-right:8px}
+  .lbl.demo{color:#067d17} .lbl.exer{color:#b45309} .lbl.ans{color:#067d17} .lbl.ref{color:#6d28d9}
+  .cb-note{margin-left:8px;font-size:11px;color:#8b949e}
   .cb-btns{margin-left:auto;display:flex;gap:8px}
-  .btn{font-size:12.5px;font-family:inherit;border-radius:7px;padding:5px 14px;border:1px solid #3c3f41;background:#45474a;color:#bbbbbb;cursor:pointer;transition:all .15s;font-weight:600}
-  .btn:hover{background:#55585c}
-  .btn.run{background:#cc7832;border-color:#cc7832;color:#1e1e1e}
-  .btn.run:hover{background:#d98a4d}
+  .btn{font-size:12.5px;font-family:inherit;border-radius:7px;padding:5px 14px;border:1px solid #d4d4d8;background:#f3f4f6;color:#374151;cursor:pointer;transition:all .15s;font-weight:600}
+  .btn:hover{background:#e5e7eb}
+  .btn.run{background:#2563eb;border-color:#2563eb;color:#ffffff}
+  .btn.run:hover{background:#3b76f0}
   .btn.run:disabled{opacity:.5;cursor:wait}
   .btn.reset{background:none}
-  .btn.copy{background:#45474a;border-color:#3c3f41;color:#a9b7c6}
+  .btn.copy{background:#f3f4f6;border-color:#d4d4d8;color:#374151}
   .codewrap{position:relative}
-  .hlayer{position:absolute;inset:0;margin:0;padding:14px 16px;background:transparent;color:#a9b7c6;font-family:Consolas,"Courier New",monospace;font-size:13.5px;line-height:1.65;white-space:pre;overflow:hidden;pointer-events:none;tab-size:4;word-break:normal;box-sizing:border-box}
-  .codearea{display:block;width:100%;border:none;background:transparent;color:transparent;caret-color:#a9b7c6;font-family:Consolas,"Courier New",monospace;font-size:13.5px;line-height:1.65;padding:14px 16px;outline:none;tab-size:4;white-space:pre;overflow-x:auto;min-height:110px;height:auto;field-sizing:content;resize:none;position:relative;z-index:1}
-  .codearea::selection{background:rgba(90,146,217,.32)}
-  .t-str{color:#6a8759}
-  .t-cmt{color:#808080;font-style:italic}
-  .t-kw{color:#cc7832}
-  .t-bi{color:#9876aa}
-  .t-num{color:#6897bb}
-  .t-dec{color:#ffc66d}
-  .output{margin:0;padding:12px 16px;background:#1e1e1e;border-top:1px solid #3c3f41;color:#7ec699;font-family:Consolas,"Courier New",monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-all;min-height:20px;display:none}
+  .hlayer{position:absolute;inset:0;margin:0;padding:14px 16px;background:transparent;color:#1f2937;font-family:Consolas,"Courier New",monospace;font-size:13.5px;line-height:1.65;white-space:pre;overflow:hidden;pointer-events:none;tab-size:4;word-break:normal;box-sizing:border-box}
+  .codearea{display:block;width:100%;border:none;background:transparent;color:transparent;caret-color:#1f2937;font-family:Consolas,"Courier New",monospace;font-size:13.5px;line-height:1.65;padding:14px 16px;outline:none;tab-size:4;white-space:pre;overflow-x:auto;min-height:110px;height:auto;field-sizing:content;resize:none;position:relative;z-index:1}
+  .codearea::selection{background:rgba(37,99,235,.25)}
+  .t-str{color:#067d17}
+  .t-cmt{color:#8c8c8c;font-style:italic}
+  .t-kw{color:#0033b3}
+  .t-bi{color:#94558d}
+  .t-num{color:#1750eb}
+  .t-dec{color:#af00db}
+  .output{margin:0;padding:12px 16px;background:#ffffff;border-top:1px solid #e2e5ea;color:#334155;font-family:Consolas,"Courier New",monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-all;min-height:20px;display:none}
   .output.show{display:block}
-  .output.err{color:#fda4af}
+  .output.err{color:#dc2626}
   .output img{display:block;margin:10px auto;max-width:90%;border-radius:8px;border:1px solid var(--line)}
   .stat-msg{font-size:12px;color:#8f949a;padding:6px 16px;display:none}
   .stat-msg.show{display:block}
@@ -212,6 +212,7 @@ const CH = {
 <script src="ch8.js"></script>
 <script src="quiz.js"></script>
 <script src="sheet.js"></script>
+<script src="map.js"></script>
 <script src="qbank.js"></script>
 <script src="tiku.js"></script>
 <script>
@@ -459,6 +460,7 @@ function renderNav(activeId){
     html += '</div>';
   });
   html += '<div class="nav-extra">' +
+    '<button class="lesson' + (activeId === "_map" ? " active" : "") + '" onclick="goto(\'_map\')"><span class="no">🗺</span><span>竞赛交付地图</span></button>' +
     '<button class="lesson' + (activeId === "_sheet" ? " active" : "") + '" onclick="goto(\'_sheet\')"><span class="no">📋</span><span>API 速查表</span></button>' +
     '<button class="lesson' + (activeId === "_quiz" ? " active" : "") + '" onclick="goto(\'_quiz\')"><span class="no">🎯</span><span>自测题</span></button>' +
     '</div>';
@@ -577,6 +579,7 @@ function goto(id){
   const main = document.getElementById("main");
   if(id === "_sheet") main.innerHTML = sheetHTML();
   else if(id === "_quiz") main.innerHTML = quizHTML();
+  else if(id === "_map") main.innerHTML = MAP.render();
   else if(id === "_tiku") main.innerHTML = TIKU.render();
   else {
     const l = LES.find(x => x.id === id);
