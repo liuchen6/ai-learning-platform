@@ -84,22 +84,31 @@
   .tip p{color:#e2e8f0;font-size:14.5px}
   .tip b{color:var(--orange)}
 
-  .codeblock{border-radius:12px;overflow:hidden;border:1px solid var(--line);margin:16px 0;background:#0b1524}
-  .cb-head{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#0e1a2e;border-bottom:1px solid var(--line)}
-  .cb-title{font-size:13px;font-weight:600;color:#cbd5e1}
-  .lbl{font-size:11px;background:var(--card2);border-radius:4px;padding:1px 7px;font-weight:700;margin-right:8px}
-  .lbl.demo{color:var(--blue)} .lbl.exer{color:#fb923c} .lbl.ans{color:var(--green)} .lbl.ref{color:#c4b5fd}
-  .cb-note{margin-left:8px;font-size:11px;color:var(--dim2)}
+  .codeblock{border-radius:12px;overflow:hidden;border:1px solid #3c3f41;margin:16px 0;background:#2b2b2b}
+  .cb-head{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#333333;border-bottom:1px solid #3c3f41}
+  .cb-title{font-size:13px;font-weight:600;color:#bbbbbb}
+  .lbl{font-size:11px;background:#45474a;border-radius:4px;padding:1px 7px;font-weight:700;margin-right:8px}
+  .lbl.demo{color:#6a8759} .lbl.exer{color:#cc7832} .lbl.ans{color:#6a8759} .lbl.ref{color:#9876aa}
+  .cb-note{margin-left:8px;font-size:11px;color:#808080}
   .cb-btns{margin-left:auto;display:flex;gap:8px}
-  .btn{font-size:12.5px;font-family:inherit;border-radius:7px;padding:5px 14px;border:1px solid var(--line);background:var(--card2);color:var(--txt);cursor:pointer;transition:all .15s;font-weight:600}
-  .btn:hover{background:#334155}
-  .btn.run{background:#0ea5e9;border-color:#0ea5e9;color:#04283d}
-  .btn.run:hover{background:#38bdf8}
+  .btn{font-size:12.5px;font-family:inherit;border-radius:7px;padding:5px 14px;border:1px solid #3c3f41;background:#45474a;color:#bbbbbb;cursor:pointer;transition:all .15s;font-weight:600}
+  .btn:hover{background:#55585c}
+  .btn.run{background:#cc7832;border-color:#cc7832;color:#1e1e1e}
+  .btn.run:hover{background:#d98a4d}
   .btn.run:disabled{opacity:.5;cursor:wait}
   .btn.reset{background:none}
-  .btn.copy{background:var(--card2);border-color:var(--line);color:var(--dim)}
-  .codearea{display:block;width:100%;border:none;background:transparent;color:#d7e6f5;font-family:Consolas,"Courier New",monospace;font-size:13.5px;line-height:1.65;padding:14px 16px;outline:none;tab-size:4;white-space:pre;overflow-x:auto;min-height:110px;height:auto;field-sizing:content;resize:none}
-  .output{margin:0;padding:12px 16px;background:#070e1a;border-top:1px solid var(--line);color:#94d8a0;font-family:Consolas,"Courier New",monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-all;min-height:20px;display:none}
+  .btn.copy{background:#45474a;border-color:#3c3f41;color:#a9b7c6}
+  .codewrap{position:relative}
+  .hlayer{position:absolute;inset:0;margin:0;padding:14px 16px;background:transparent;color:#a9b7c6;font-family:Consolas,"Courier New",monospace;font-size:13.5px;line-height:1.65;white-space:pre;overflow:hidden;pointer-events:none;tab-size:4;word-break:normal;box-sizing:border-box}
+  .codearea{display:block;width:100%;border:none;background:transparent;color:transparent;caret-color:#a9b7c6;font-family:Consolas,"Courier New",monospace;font-size:13.5px;line-height:1.65;padding:14px 16px;outline:none;tab-size:4;white-space:pre;overflow-x:auto;min-height:110px;height:auto;field-sizing:content;resize:none;position:relative;z-index:1}
+  .codearea::selection{background:rgba(90,146,217,.32)}
+  .t-str{color:#6a8759}
+  .t-cmt{color:#808080;font-style:italic}
+  .t-kw{color:#cc7832}
+  .t-bi{color:#9876aa}
+  .t-num{color:#6897bb}
+  .t-dec{color:#ffc66d}
+  .output{margin:0;padding:12px 16px;background:#1e1e1e;border-top:1px solid #3c3f41;color:#7ec699;font-family:Consolas,"Courier New",monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-all;min-height:20px;display:none}
   .output.show{display:block}
   .output.err{color:#fda4af}
   .output img{display:block;margin:10px auto;max-width:90%;border-radius:8px;border:1px solid var(--line)}
@@ -314,8 +323,9 @@ function renderOutput(out, txt, imgs){
 
 function resetCode(btn){
   const block = btn.closest(".codeblock");
-  block.querySelector("textarea").value = block.dataset.orig;
-  autoGrow(block.querySelector("textarea"));
+  const ta = block.querySelector("textarea");
+  ta.value = block.dataset.orig;
+  autoGrow(ta); refreshHL(ta);
   const out = block.querySelector(".output");
   out.textContent = ""; out.className = "output";
   const stat = block.querySelector(".stat-msg");
@@ -342,7 +352,10 @@ function codeblockHTML(title, lblClass, code, opts){
       '<span class="cb-title"><span class="lbl ' + lblClass + '">' + title + '</span></span>' +
       '<div class="cb-btns">' + btns + '</div>' +
     '</div>' +
-    '<textarea class="codearea" spellcheck="false" oninput="autoGrow(this)">' + esc(code) + '</textarea>' +
+    '<div class="codewrap">' +
+      '<pre class="hlayer" aria-hidden="true"></pre>' +
+      '<textarea class="codearea" spellcheck="false" oninput="autoGrow(this);refreshHL(this)" onscroll="syncHL(this)">' + esc(code) + '</textarea>' +
+    '</div>' +
     '<pre class="output"></pre>' +
     '<div class="stat-msg"></div>' +
   '</div>';
@@ -351,6 +364,46 @@ function codeblockHTML(title, lblClass, code, opts){
 function autoGrow(ta){
   ta.style.height = "auto";
   ta.style.height = ta.scrollHeight + "px";
+}
+
+function hlPython(code){
+  const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const KW = "and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield True False None";
+  const BI = "print len range int float str list dict set tuple bool input open isinstance super map filter sorted zip enumerate round abs sum min max type repr format join split strip append pop replace value_counts mean std count drop fillna read_csv to_csv head isna unique to_string read_excel groupby astype reset_index set_index";
+  const re = new RegExp(
+    "('''[\\s\\S]*?'''|\"\"\"[\\s\\S]*?\"\"\"|'(?:\\\\.|[^'\\\\\\n])*'|\"(?:\\\\.|[^\"\\\\\\n])*\")" +
+    "|(#.*$)" +
+    "|(\\b(?:" + KW.split(" ").join("|") + ")\\b)" +
+    "|(\\b(?:" + BI.split(" ").join("|") + ")\\b)" +
+    "|(\\b\\d+(?:\\.\\d+)?\\b)" +
+    "|(@\\w+)" +
+    "|([\\s\\S])", "gm");
+  return code.replace(re, (m, s1, s2, s3, s4, s5, s6, s7) => {
+    if(s1) return '<span class="t-str">' + esc(s1) + '</span>';
+    if(s2) return '<span class="t-cmt">' + esc(s2) + '</span>';
+    if(s3) return '<span class="t-kw">' + esc(s3) + '</span>';
+    if(s4) return '<span class="t-bi">' + esc(s4) + '</span>';
+    if(s5) return '<span class="t-num">' + esc(s5) + '</span>';
+    if(s6) return '<span class="t-dec">' + esc(s6) + '</span>';
+    return esc(s7);
+  });
+}
+
+function refreshHL(ta){
+  const hl = ta.parentElement.querySelector(".hlayer");
+  if(!hl) return;
+  try {
+    hl.innerHTML = hlPython(ta.value);
+  } catch(e){
+    hl.innerHTML = esc(ta.value);
+  }
+}
+
+function syncHL(ta){
+  const hl = ta.parentElement.querySelector(".hlayer");
+  if(!hl) return;
+  hl.scrollTop = ta.scrollTop;
+  hl.scrollLeft = ta.scrollLeft;
 }
 
 function copyCode(btn){
@@ -505,7 +558,7 @@ function goto(id){
     const l = LES.find(x => x.id === id);
     if(l) main.innerHTML = lessonHTML(l);
   }
-  document.querySelectorAll(".codearea").forEach(autoGrow);
+  document.querySelectorAll(".codearea").forEach(ta => { autoGrow(ta); refreshHL(ta); });
   renderNav(id);
   window.scrollTo(0, 0);
   closeNav();
