@@ -213,6 +213,7 @@ const CH = {
 <script src="quiz.js"></script>
 <script src="sheet.js"></script>
 <script src="map.js"></script>
+<script src="handbook.js"></script>
 <script src="qbank.js"></script>
 <script src="tiku.js"></script>
 <script>
@@ -476,6 +477,7 @@ function renderNav(activeId){
   });
   html += '<div class="nav-extra">' +
     '<button class="lesson' + (activeId === "_map" ? " active" : "") + '" onclick="goto(\'_map\')"><span class="no">🗺</span><span>竞赛交付地图</span></button>' +
+    '<button class="lesson' + (activeId === "_hand" ? " active" : "") + '" onclick="goto(\'_hand\')"><span class="no">📖</span><span>操作速查手册</span></button>' +
     '<button class="lesson' + (activeId === "_sheet" ? " active" : "") + '" onclick="goto(\'_sheet\')"><span class="no">📋</span><span>API 速查表</span></button>' +
     '<button class="lesson' + (activeId === "_quiz" ? " active" : "") + '" onclick="goto(\'_quiz\')"><span class="no">🎯</span><span>自测题</span></button>' +
     '</div>';
@@ -595,6 +597,7 @@ function goto(id){
   if(id === "_sheet") main.innerHTML = sheetHTML();
   else if(id === "_quiz") main.innerHTML = quizHTML();
   else if(id === "_map") main.innerHTML = MAP.render();
+  else if(id === "_hand") main.innerHTML = HBOOK.render();
   else if(id === "_tiku") main.innerHTML = TIKU.render();
   else {
     const l = LES.find(x => x.id === id);
