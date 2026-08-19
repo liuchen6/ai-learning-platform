@@ -309,7 +309,7 @@ function initPyodide(){
         setBadge("ready", "✔ 运行时就绪");
       }
       return pyodide;
-    })().catch(e => { setBadge("err", "✖ 运行时加载失败"); throw e; });
+    })().catch(e => { setBadge("err", "✖ 运行时加载失败，点任意运行按钮可重试"); pyInit = null; throw e; });
   }
   return pyInit;
 }
