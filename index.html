@@ -15,12 +15,15 @@
   ::selection{background:#93c5fd80}
 
   header{position:sticky;top:0;z-index:50;display:flex;align-items:flex-start;gap:8px;padding:8px 12px;background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
-  .header-tabs{display:flex;flex-wrap:wrap;gap:4px;flex:1;min-width:0}
-  .htab{background:none;border:1px solid var(--line);border-radius:14px;padding:3px 10px;color:var(--dim);cursor:pointer;font-size:11.5px;font-family:inherit;white-space:nowrap;transition:all .15s;flex-shrink:0}
+  .header-tabs{display:flex;flex-wrap:wrap;gap:5px;flex:1;min-width:0}
+  .htab{background:#f8f9fa;border:1px solid #e5e7eb;border-radius:16px;padding:4px 12px;color:#4b5563;cursor:pointer;font-size:12px;font-family:inherit;white-space:nowrap;transition:all .15s;flex-shrink:0;line-height:1.4}
   .htab:hover{background:#eef2f7;border-color:#c7d2de}
-  .htab.ch{font-weight:600}
+  .htab.ch{font-weight:600;background:#f0f4ff;border-color:#dbeafe}
+  .htab.ch:hover{background:#dbeafe}
   .htab.ch.active{color:#fff;border-color:transparent}
-  .htab.tool{border-style:dashed}
+  .htab.tool{background:#fff;border-style:dashed;color:#6b7280}
+  .htab.tool:hover{background:#f9fafb;border-color:#9ca3af}
+  .tab-break{flex-basis:100%;height:0}
   .logo{font-weight:800;font-size:17px;white-space:nowrap}
   .logo b{color:var(--blue)}
   .logo small{color:var(--dim2);font-weight:500;margin-left:8px}
@@ -495,7 +498,8 @@ function renderNav(activeId){
   const ct = document.getElementById('headerTabs');
   if(ct) ct.innerHTML = Object.keys(CH).map(ch => {
     const col = CH_COLORS[ch] || '#888';
-    return '<button class="htab ch' + (ch === activeCh ? " active" : "") + '" style="' + (ch === activeCh ? 'background:' + col + ';color:#fff' : '') + '" onclick="switchCh(\'' + ch + '\')">' + CH[ch].name + '</button>';
+    const br = ch === "7" ? '<span class="tab-break"></span>' : '';
+    return br + '<button class="htab ch' + (ch === activeCh ? " active" : "") + '" style="' + (ch === activeCh ? 'background:' + col + ';color:#fff' : '') + '" onclick="switchCh(\'' + ch + '\')">' + CH[ch].name + '</button>';
   }).join('') +
     '<button class="htab tool' + (activeId === "_map" ? " active" : "") + '" onclick="goto(\'_map\')">🗺 竞赛交付地图</button>' +
     '<button class="htab tool' + (activeId === "_hand" ? " active" : "") + '" onclick="goto(\'_hand\')">📖 操作速查手册</button>' +
