@@ -231,6 +231,8 @@ const CH = {
 <script src="qbank.js"></script>
 <script src="tiku.js"></script>
 <script src="practice.js"></script>
+<script src="troubleshoot.js"></script>
+<script src="mock.js"></script>
 <script>
 const LES = (window.PART1 || []).concat(window.PART2 || [], window.PART3 || [], window.PART4 || [], window.PART5 || [], window.PART6 || [], window.PART7 || [], window.PART8 || []);
 const QUIZ = window.QUIZ || [];
@@ -505,7 +507,9 @@ function renderNav(activeId){
     '<button class="htab tool' + (activeId === "_hand" ? " active" : "") + '" onclick="goto(\'_hand\')">📖 操作速查手册</button>' +
     '<button class="htab tool' + (activeId === "_practice" ? " active" : "") + '" onclick="goto(\'_practice\')">✍️ 手写练习</button>' +
     '<button class="htab tool' + (activeId === "_sheet" ? " active" : "") + '" onclick="goto(\'_sheet\')">📋 API速查表</button>' +
-    '<button class="htab tool' + (activeId === "_quiz" ? " active" : "") + '" onclick="goto(\'_quiz\')">🎯 自测题</button>';
+    '<button class="htab tool' + (activeId === "_quiz" ? " active" : "") + '" onclick="goto(\'_quiz\')">🎯 自测题</button>' +
+    '<button class="htab tool' + (activeId === "_trouble" ? " active" : "") + '" onclick="goto(\'_trouble\')">🔧 故障排除</button>' +
+    '<button class="htab tool' + (activeId === "_mock" ? " active" : "") + '" onclick="goto(\'_mock\')">⏱ 模拟考试</button>';
 }
 
 function isDone(id){
@@ -629,6 +633,8 @@ function goto(id){
   else if(id === "_map") main.innerHTML = MAP.render();
   else if(id === "_hand") main.innerHTML = HBOOK.render();
   else if(id === "_practice") main.innerHTML = PRACTICE.render();
+  else if(id === "_trouble") main.innerHTML = TROUBLE.render();
+  else if(id === "_mock") main.innerHTML = MOCK.render();
   else if(id === "_tiku") main.innerHTML = TIKU.render();
   else {
     const l = LES.find(x => x.id === id);

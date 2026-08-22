@@ -79,6 +79,39 @@ render: function(){
     )
     + '<p style="margin-top:8px;font-size:13.5px;color:#374151">模板与范例：' + btn('7-2','7-2 三步') + btn('7-3','7-3 方案') + btn('7-5','7-5 报告清单') + btn('8-9','8-9 真题范例') + '</p></div>' +
 
+    '<div class="sheet-section"><h3>任务四 逐行命令卡（比赛现场照抄）</h3>' +
+    '<div class="card" style="padding:0;overflow:hidden"><table>'
+    + '<tr><th style="width:120px">步骤</th><th>命令或操作</th><th>检查点</th></tr>'
+    + '<tr><td>① Anaconda</td><td>打开终端，确认环境：<code>python -c "import torch,sklearn,pandas;print(torch.__version__)"</code></td><td>输出 2.0.1</td></tr>'
+    + '<tr><td>② Ollama 三查</td><td><code>ollama list</code> 确认三个模型在列<br><code>ollama run qwen3:14b-q8_0</code> 随便问一句</td><td>模型在列 + 能回答</td></tr>'
+    + '<tr><td>③ Dify</td><td>浏览器打开 Dify 登录页（或 <code>docker ps</code> 看 dify 容器）</td><td>能登录、看到工作台</td></tr>'
+    + '<tr><td>④ 建知识库</td><td>Dify 左栏「知识库」→「创建」→ 上传文档 → 解析方式选「自动」→ Embedding 模型选 <b>bge-m3</b></td><td>文档状态「已处理」</td></tr>'
+    + '<tr><td>⑤ 召回测试</td><td>知识库内「测试」输入框，问文档里的事实问题</td><td>命中正确片段</td></tr>'
+    + '<tr><td>⑥ 建工作流</td><td>「应用」→「创建」→ 选 Agent 类型 → 拖入节点：LLM / 知识库检索 / 代码 / 条件分支 → 连线</td><td>工作流可视化保存</td></tr>'
+    + '<tr><td>⑦ 场景测试</td><td>对话测试若干轮，覆盖卷面全部场景</td><td>每轮回答合理</td></tr>'
+    + '<tr><td>⑧ 截图</td><td>按卷面命名逐张保存：知识库页 / 工作流图 / 对话截图</td><td>命名逐字核对</td></tr>'
+    + '</table></div></div>' +
+
+    '<div class="sheet-section"><h3>Ollama 命令速查（比赛常用）</h3>' +
+    '<div class="card" style="padding:0;overflow:hidden"><table>'
+    + '<tr><th>场景</th><th>命令</th><th>说明</th></tr>'
+    + '<tr><td>查看已装模型</td><td><code>ollama list</code></td><td>确认 qwen3:14b-q8_0、deepseek-r1:14b、bge-m3 在列</td></tr>'
+    + '<tr><td>运行模型</td><td><code>ollama run qwen3:14b-q8_0</code></td><td>进入交互对话，Ctrl+D 退出</td></tr>'
+    + '<tr><td>拉取模型</td><td><code>ollama pull bge-m3</code></td><td>如模型缺失时补拉</td></tr>'
+    + '<tr><td>查看模型详情</td><td><code>ollama show qwen3:14b-q8_0</code></td><td>查看参数量、模板等</td></tr>'
+    + '<tr><td>API 调用</td><td><code>curl http://localhost:11434/api/generate -d \'{"model":"qwen3:14b-q8_0","prompt":"你好"}\'</code></td><td>程序化调用本地模型</td></tr>'
+    + '<tr><td>停止服务</td><td><code>ollama stop</code></td><td>释放显存</td></tr>'
+    + '</table></div></div>' +
+
+    '<div class="sheet-section"><h3>Dify 操作清单（逐项打勾）</h3>' +
+    '<div class="card"><ul class="points">'
+    + '<li><b>建知识库</b>：知识库 → 创建 → 命名按卷面 → 上传文档 → 解析方式自动 → Embedding 选 <code>bge-m3</code> → 等状态「已处理」</li>'
+    + '<li><b>召回测试</b>：知识库内测试 → 问文档中的事实问题 → 确认命中片段正确 → 换两种问法再试</li>'
+    + '<li><b>建应用</b>：应用 → 创建 → 选 Agent → 关联知识库</li>'
+    + '<li><b>配工作流</b>：添加节点（LLM / 知识库检索 / 条件分支 / 代码执行） → 连线 → 配置每个节点参数</li>'
+    + '<li><b>测试发布</b>：对话测试多轮 → 覆盖卷面场景 → 截图保存</li>'
+    + '</ul></div></div>' +
+
     '<div class="sheet-section"><h3>收卷前 15 分钟检查卡</h3>' +
     '<div class="card"><ul class="points">'
     + '<li>命名逐字核对：大小写、下划线、中文或英文名、序号，跟试卷一字不差</li>'

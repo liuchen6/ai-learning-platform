@@ -114,6 +114,73 @@ list: [
       {type: "code", text: "sc.fit_transform", hint: "sc.fit_transform(X_train)"},
       {type: "code", text: "sc.transform", hint: "sc.transform(X_test)，不能用 fit_transform"}
     ]
+  },
+  {
+    id: "P11", title: "任务三 · YOLO 数据集格式验证",
+    desc: "补全 3 处，读取 yaml配置并检查类别、目录、标签格式。", src: "5-10", pkg: "pyyaml",
+    template: "import yaml, os\n\n#① 读取yaml配置\nwith open('dataset.yaml', 'r', encoding='utf-8') as f:\n    data = ____①____\n\n#② 取出类别名列表\nnames = ____②____\nprint('类别:', names)\nprint('类别数:', len(names))\n\n#③ 检查训练集目录是否存在\ntrain_dir = data.get('train', '')\nexists = ____③____\nprint('训练集目录存在:', exists)",
+    checks: [
+      {type: "code", text: "yaml.safe_load", hint: "yaml.safe_load(f)"},
+      {type: "code", text: "names", hint: "data['names'] 或 data.get('names')"},
+      {type: "code", text: "os.path.exists", hint: "os.path.exists(train_dir)"},
+      {type: "out", text: "类别:", hint: "输出应包含类别列表"}
+    ]
+  },
+  {
+    id: "P12", title: "任务三 · YOLO 训练命令补全",
+    desc: "补全 3 处，写出完整的 YOLO 训练调用（比赛必背）。", src: "5-10", pkg: "",
+    template: "try:\n    from ultralytics import YOLO\nexcept ImportError:\n    YOLO = None\n\nif YOLO:\n    #①加载预训练权重\n    model = ____①____\n\n    #②训练：数据yaml、跑50轮、批次8、图像640\n    model.train(\n        data='dataset.yaml',\n        ____②____,\n        ____③____,\n        img_size=640,\n        workers=0,\n        lr0=0.01\n    )\n    print('训练命令已生成')\nelse:\n    print('ultralytics未安装，跳过实际训练')",
+    checks: [
+      {type: "code", text: "YOLO('yolov8n.pt')", hint: "加载预训练权重：YOLO('yolov8n.pt')"},
+      {type: "code", text: "epochs=50", hint: "训练轮数：epochs=50"},
+      {type: "code", text: "batch_size=8", hint: "批次大小：batch_size=8"}
+    ]
+  },
+  {
+    id: "P13", title: "任务三 · 混淆矩阵与评估指标",
+    desc: "补全 3 处，从混淆矩阵计算准确率、召回率、F1。", src: "5-10", pkg: "numpy",
+    template: "import numpy as np\n\n# 模拟3类混淆矩阵\ncm = np.array([[45, 3, 2],\n               [5, 38, 2],\n               [1, 2, 42]])\n\n#①总样本数\ntotal = ____①____\n\n#②正确预测数（对角线之和）\ncorrect = ____②____\n\n#③准确率\nacc = ____③____\nprint(f'样本:{total} 正确:{correct} 准确率:{acc:.4f}')",
+    checks: [
+      {type: "code", text: ".sum()", hint: "total = cm.sum()"},
+      {type: "code", text: "trace", hint: "correct = np.trace(cm)"},
+      {type: "code", text: "correct / total", hint: "acc = correct / total"},
+      {type: "out", text: "准确率:0.8909", hint: "期望输出 准确率:0.8909"}
+    ]
+  },
+  {
+    id: "P14", title: "任务三 · 损失曲线保存（比赛要求 300dpi）",
+    desc: "补全 3 处，画出损失曲线并按卷面要求保存。", src: "8-7", pkg: "matplotlib",
+    template: "import matplotlib.pyplot as plt\nimport numpy as np\n\nepochs = np.arange(1, 51)\nloss = [0.9 * (0.92 ** x) + 0.03 * np.random.random() for x in epochs]\nval_loss = [0.95 * (0.91 ** x) + 0.04 * np.random.random() for x in epochs]\n\n#①创建画布\nfig, ax = ____①____\n\n#②画两条线\nax.plot(epochs, loss, label='train')\nax.plot(____②____)\n\n#③设置标签和图例\nax.set_xlabel('Epoch')\nax.set_ylabel('Loss')\n____③____\n\n#④保存 300dpi PNG\nplt.savefig('loss_curve.png', dpi=300)\nprint('损失曲线已保存')",
+    checks: [
+      {type: "code", text: "plt.subplots()", hint: "fig, ax = plt.subplots()"},
+      {type: "code", text: "val_loss", hint: "ax.plot(epochs, val_loss, label='val')"},
+      {type: "code", text: "legend", hint: "ax.legend()"},
+      {type: "out", text: "损失曲线已保存", hint: "输出 损失曲线已保存"}
+    ]
+  },
+  {
+    id: "P15", title: "任务五 · 业务痛点分析三步（填空写报告）",
+    desc: "补全 3 处，写出业务痛点分析的核心三句话。", src: "7-2", pkg: "",
+    template: "# 业务痛点分析三步（比赛报告必写段落）\n\n#①第一步：这个场景的核心痛点是什么？\npain = '____①____'\n\n#②第二步：现有的人工方案为什么不行？\nreason = '____②____'\n\n#③第三步：引入AI智能体后能带来什么价值？\nvalue = '____③____'\n\nprint('痛点:', pain)\nprint('原因:', reason)\nprint('价值:', value)",
+    checks: [
+      {type: "code", text: "____①____", hint: "空位①还没填"},
+      {type: "code", text: "____②____", hint: "空位②还没填"},
+      {type: "code", text: "____③____", hint: "空位③还没填"},
+      {type: "out", text: "痛点:", hint: "输出应包含三句话"},
+      {type: "out", text: "价值:", hint: "输出应包含价值句"}
+    ]
+  },
+  {
+    id: "P16", title: "任务五 · 技术方案四件套（填空写报告）",
+    desc: "补全 4 处，写出大模型方案的四个技术选型及理由。", src: "7-3", pkg: "",
+    template: "# 技术方案四件套（比赛报告必写段落）\n\n#①大语言模型选型（名称+选型理由）\nllm = '____①____'\n\n#②向量模型选型（名称+选型理由）\nemb = '____②____'\n\n#③应用开发平台选型\nplat = '____③____'\n\n#④数据库选型（含为什么不用另一个）\ndb = '____④____'\n\nprint(f'大语言模型: {llm}')\nprint(f'向量模型: {emb}')\nprint(f'开发平台: {plat}')\nprint(f'数据库: {db}')",
+    checks: [
+      {type: "code", text: "____①____", hint: "空位①还没填"},
+      {type: "code", text: "____②____", hint: "空位②还没填"},
+      {type: "code", text: "____③____", hint: "空位③还没填"},
+      {type: "code", text: "____④____", hint: "空位④还没填"},
+      {type: "out", text: "大语言模型:", hint: "输出应包含四个选型"}
+    ]
   }
 ],
 
