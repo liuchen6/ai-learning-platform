@@ -14,7 +14,7 @@
   body{background:var(--bg);color:var(--txt);font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;font-size:15px;line-height:1.7}
   ::selection{background:#93c5fd80}
 
-  header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;padding:0 20px;height:56px;background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
+  header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;padding:0 16px;height:52px;background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
   .logo{font-weight:800;font-size:17px;white-space:nowrap}
   .logo b{color:var(--blue)}
   .logo small{color:var(--dim2);font-weight:500;margin-left:8px}
@@ -55,10 +55,11 @@
   .lesson.active .no{color:var(--blue)}
   .lesson .dur{margin-left:auto;font-size:11px;color:var(--dim2);flex-shrink:0}
   .lesson .ck{font-size:12px;color:var(--green);flex-shrink:0}
-  .nav-extra{margin-top:8px;border-top:1px solid var(--line);padding-top:12px;display:flex;flex-wrap:wrap;gap:6px}
-  .nav-extra .lesson{width:auto;flex-shrink:0;padding:5px 12px;border-radius:20px;background:var(--card);border:1px solid var(--line);font-size:12.5px;white-space:nowrap}
-  .nav-extra .lesson:hover{background:#eef2f7;border-color:#c7d2de}
-  .nav-extra .lesson.active{background:#2563eb12;color:var(--blue);border-color:#2563eb40;font-weight:600}
+  .nav-extra{margin-top:8px;border-top:1px solid var(--line);padding-top:12px}
+  .header-nav{display:flex;gap:4px;margin-left:16px;flex-shrink:1;min-width:0}
+  .hnav{background:none;border:1px solid transparent;border-radius:16px;padding:4px 11px;color:var(--dim);cursor:pointer;font-size:12px;font-family:inherit;white-space:nowrap;transition:all .15s;flex-shrink:0}
+  .hnav:hover{background:#eef2f7;border-color:#d1d5db}
+  .hnav.active{background:#2563eb12;color:var(--blue);border-color:#2563eb40;font-weight:600}
 
   #article{animation:fadeIn .25s}
   @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -176,6 +177,7 @@
 <header>
   <button id="menuBtn" onclick="toggleNav()">☰</button>
   <div class="logo">AI 技能大赛<b> 备战站</b><small>人工智能技术应用赛项</small></div>
+  <div id="headerNav" class="header-nav"></div>
   <div class="ml-auto">
     <div id="progressWrap"><div id="progressBar"><div id="progressFill"></div></div><span id="progressNum" style="font-size:12px;color:var(--dim)">0/18</span></div>
     <span id="statusBadge" class="badge loading">⌛ 运行时未加载</span>
@@ -479,14 +481,16 @@ function renderNav(activeId){
     });
     html += '</div>';
   });
-  html += '<div class="nav-extra">' +
-    '<button class="lesson' + (activeId === "_map" ? " active" : "") + '" onclick="goto(\'_map\')"><span class="no">🗺</span><span>竞赛交付地图</span></button>' +
-    '<button class="lesson' + (activeId === "_hand" ? " active" : "") + '" onclick="goto(\'_hand\')"><span class="no">📖</span><span>操作速查手册</span></button>' +
-    '<button class="lesson' + (activeId === "_practice" ? " active" : "") + '" onclick="goto(\'_practice\')"><span class="no">✍️</span><span>手写练习</span></button>' +
-    '<button class="lesson' + (activeId === "_sheet" ? " active" : "") + '" onclick="goto(\'_sheet\')"><span class="no">📋</span><span>API 速查表</span></button>' +
-    '<button class="lesson' + (activeId === "_quiz" ? " active" : "") + '" onclick="goto(\'_quiz\')"><span class="no">🎯</span><span>自测题</span></button>' +
-    '</div>';
+  html += '</div>';
+  });
   nav.innerHTML = html;
+  const hn = document.getElementById('headerNav');
+  if(hn) hn.innerHTML =
+    '<button class="hnav' + (activeId === "_map" ? " active" : "") + '" onclick="goto(\'_map\')">🗺 竞赛交付地图</button>' +
+    '<button class="hnav' + (activeId === "_hand" ? " active" : "") + '" onclick="goto(\'_hand\')">📖 操作速查手册</button>' +
+    '<button class="hnav' + (activeId === "_practice" ? " active" : "") + '" onclick="goto(\'_practice\')">✍️ 手写练习</button>' +
+    '<button class="hnav' + (activeId === "_sheet" ? " active" : "") + '" onclick="goto(\'_sheet\')">📋 API 速查表</button>' +
+    '<button class="hnav' + (activeId === "_quiz" ? " active" : "") + '" onclick="goto(\'_quiz\')">🎯 自测题</button>';
 }
 
 function isDone(id){
