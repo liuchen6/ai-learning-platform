@@ -216,6 +216,7 @@ const CH = {
 <script src="handbook.js"></script>
 <script src="qbank.js"></script>
 <script src="tiku.js"></script>
+<script src="practice.js"></script>
 <script>
 const LES = (window.PART1 || []).concat(window.PART2 || [], window.PART3 || [], window.PART4 || [], window.PART5 || [], window.PART6 || [], window.PART7 || [], window.PART8 || []);
 const QUIZ = window.QUIZ || [];
@@ -478,6 +479,7 @@ function renderNav(activeId){
   html += '<div class="nav-extra">' +
     '<button class="lesson' + (activeId === "_map" ? " active" : "") + '" onclick="goto(\'_map\')"><span class="no">🗺</span><span>竞赛交付地图</span></button>' +
     '<button class="lesson' + (activeId === "_hand" ? " active" : "") + '" onclick="goto(\'_hand\')"><span class="no">📖</span><span>操作速查手册</span></button>' +
+    '<button class="lesson' + (activeId === "_practice" ? " active" : "") + '" onclick="goto(\'_practice\')"><span class="no">✍️</span><span>手写练习</span></button>' +
     '<button class="lesson' + (activeId === "_sheet" ? " active" : "") + '" onclick="goto(\'_sheet\')"><span class="no">📋</span><span>API 速查表</span></button>' +
     '<button class="lesson' + (activeId === "_quiz" ? " active" : "") + '" onclick="goto(\'_quiz\')"><span class="no">🎯</span><span>自测题</span></button>' +
     '</div>';
