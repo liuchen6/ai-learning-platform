@@ -14,11 +14,13 @@
   body{background:var(--bg);color:var(--txt);font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;font-size:15px;line-height:1.7}
   ::selection{background:#93c5fd80}
 
-  header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:6px;padding:0 12px;height:48px;background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
-  .chapter-tabs{display:flex;gap:3px;flex-shrink:1;min-width:0;overflow-x:auto}
-  .chtabs{background:none;border:1px solid transparent;border-radius:14px;padding:3px 10px;color:var(--dim);cursor:pointer;font-size:11.5px;font-family:inherit;white-space:nowrap;transition:all .15s;flex-shrink:0}
-  .chtabs:hover{background:#eef2f7;border-color:#d1d5db}
-  .chtabs.active{color:#fff;font-weight:600;border-color:transparent}
+  header{position:sticky;top:0;z-index:50;display:flex;align-items:flex-start;gap:8px;padding:8px 12px;background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
+  .header-tabs{display:flex;flex-wrap:wrap;gap:4px;flex:1;min-width:0}
+  .htab{background:none;border:1px solid var(--line);border-radius:14px;padding:3px 10px;color:var(--dim);cursor:pointer;font-size:11.5px;font-family:inherit;white-space:nowrap;transition:all .15s;flex-shrink:0}
+  .htab:hover{background:#eef2f7;border-color:#c7d2de}
+  .htab.ch{font-weight:600}
+  .htab.ch.active{color:#fff;border-color:transparent}
+  .htab.tool{border-style:dashed}
   .logo{font-weight:800;font-size:17px;white-space:nowrap}
   .logo b{color:var(--blue)}
   .logo small{color:var(--dim2);font-weight:500;margin-left:8px}
@@ -31,11 +33,11 @@
   #progressBar{width:110px;height:6px;background:var(--card2);border-radius:3px;overflow:hidden}
   #progressFill{height:100%;width:0%;background:linear-gradient(90deg,var(--blue),var(--green));transition:width .3s}
 
-  .wrap{display:flex;min-height:calc(100vh - 48px)}
-  nav{width:290px;flex-shrink:0;border-right:1px solid var(--line);padding:16px 12px 40px;overflow-y:auto;max-height:calc(100vh - 48px);position:sticky;top:48px;background:var(--bg2)}
+  .wrap{display:flex;min-height:calc(100vh - 80px)}
+  nav{width:290px;flex-shrink:0;border-right:1px solid var(--line);padding:16px 12px 40px;overflow-y:auto;max-height:calc(100vh - 80px);position:sticky;top:80px;background:var(--bg2)}
   main{flex:1;min-width:0;padding:28px 36px 80px;max-width:980px}
   @media(max-width:900px){
-    nav{position:fixed;left:0;top:48px;bottom:0;z-index:40;transform:translateX(-100%);transition:transform .25s;box-shadow:0 10px 30px #00000026}
+    nav{position:fixed;left:0;top:80px;bottom:0;z-index:40;transform:translateX(-100%);transition:transform .25s;box-shadow:0 10px 30px #00000026}
     nav.open{transform:none}
     main{padding:20px 16px 60px}
     #menuBtn{display:inline-flex!important}
@@ -181,8 +183,7 @@
 <header>
   <button id="menuBtn" onclick="toggleNav()">☰</button>
   <div class="logo">AI 技能大赛<b> 备战站</b></div>
-  <div id="chapterTabs" class="chapter-tabs"></div>
-  <div id="headerNav" class="header-nav"></div>
+  <div id="headerTabs" class="header-tabs"></div>
   <div class="ml-auto">
     <div id="progressWrap"><div id="progressBar"><div id="progressFill"></div></div><span id="progressNum" style="font-size:12px;color:var(--dim)">0/18</span></div>
     <span id="statusBadge" class="badge loading">⌛ 运行时未加载</span>
@@ -491,18 +492,16 @@ function renderNav(activeId){
     html = '<div style="padding:20px 10px;color:var(--dim2);font-size:13px">👆 点击顶部章节按钮开始学习</div>';
   }
   nav.innerHTML = html;
-  const ct = document.getElementById('chapterTabs');
+  const ct = document.getElementById('headerTabs');
   if(ct) ct.innerHTML = Object.keys(CH).map(ch => {
     const col = CH_COLORS[ch] || '#888';
-    return '<button class="chtabs' + (ch === activeCh ? " active" : "") + '" style="' + (ch === activeCh ? 'background:' + col + ';color:#fff' : '') + '" onclick="switchCh(\'' + ch + '\')">' + CH[ch].name + '</button>';
-  }).join('');
-  const hn = document.getElementById('headerNav');
-  if(hn) hn.innerHTML =
-    '<button class="hnav' + (activeId === "_map" ? " active" : "") + '" onclick="goto(\'_map\')">🗺 竞赛交付地图</button>' +
-    '<button class="hnav' + (activeId === "_hand" ? " active" : "") + '" onclick="goto(\'_hand\')">📖 操作速查手册</button>' +
-    '<button class="hnav' + (activeId === "_practice" ? " active" : "") + '" onclick="goto(\'_practice\')">✍️ 手写练习</button>' +
-    '<button class="hnav' + (activeId === "_sheet" ? " active" : "") + '" onclick="goto(\'_sheet\')">📋 API速查表</button>' +
-    '<button class="hnav' + (activeId === "_quiz" ? " active" : "") + '" onclick="goto(\'_quiz\')">🎯 自测题</button>';
+    return '<button class="htab ch' + (ch === activeCh ? " active" : "") + '" style="' + (ch === activeCh ? 'background:' + col + ';color:#fff' : '') + '" onclick="switchCh(\'' + ch + '\')">' + CH[ch].name + '</button>';
+  }).join('') +
+    '<button class="htab tool' + (activeId === "_map" ? " active" : "") + '" onclick="goto(\'_map\')">🗺 竞赛交付地图</button>' +
+    '<button class="htab tool' + (activeId === "_hand" ? " active" : "") + '" onclick="goto(\'_hand\')">📖 操作速查手册</button>' +
+    '<button class="htab tool' + (activeId === "_practice" ? " active" : "") + '" onclick="goto(\'_practice\')">✍️ 手写练习</button>' +
+    '<button class="htab tool' + (activeId === "_sheet" ? " active" : "") + '" onclick="goto(\'_sheet\')">📋 API速查表</button>' +
+    '<button class="htab tool' + (activeId === "_quiz" ? " active" : "") + '" onclick="goto(\'_quiz\')">🎯 自测题</button>';
 }
 
 function isDone(id){
