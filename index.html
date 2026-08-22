@@ -600,6 +600,7 @@ function goto(id){
   else if(id === "_quiz") main.innerHTML = quizHTML();
   else if(id === "_map") main.innerHTML = MAP.render();
   else if(id === "_hand") main.innerHTML = HBOOK.render();
+  else if(id === "_practice") main.innerHTML = PRACTICE.render();
   else if(id === "_tiku") main.innerHTML = TIKU.render();
   else {
     const l = LES.find(x => x.id === id);
